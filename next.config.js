@@ -3,6 +3,16 @@
 const nextConfig = {
   basePath: process.env.NEXT_PUBLIC_BASE_PATH,
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH,
+  outputFileTracingRoot: __dirname,
+  async redirects() {
+    return [
+      {
+        source: '/admin/data-tables',
+        destination: '/admin/clientes',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     domains: [
       'images.unsplash.com',
