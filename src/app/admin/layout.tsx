@@ -11,13 +11,10 @@ import Footer from 'components/footer/FooterAdmin';
 import Navbar from 'components/navbar/NavbarAdmin';
 import Sidebar from 'components/sidebar/Sidebar';
 import { SidebarContext } from 'contexts/SidebarContext';
+import { usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import routes from 'routes';
-import {
-  getActiveNavbar,
-  getActiveNavbarText,
-  getActiveRoute,
-} from 'utils/navigation';
+import { getActiveRoute } from 'utils/navigation';
 
 interface DashboardLayoutProps extends PropsWithChildren {
   [x: string]: any;
@@ -26,6 +23,7 @@ interface DashboardLayoutProps extends PropsWithChildren {
 // Custom Chakra theme
 export default function AdminLayout(props: DashboardLayoutProps) {
   const { children, ...rest } = props;
+  const pathname = usePathname();
   // states and functions
   const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -66,9 +64,7 @@ export default function AdminLayout(props: DashboardLayoutProps) {
               <Navbar
                 onOpen={onOpen}
                 logoText={'Be Strong Unity'}
-                brandText={getActiveRoute(routes)}
-                secondary={getActiveNavbar(routes)}
-                message={getActiveNavbarText(routes)}
+                brandText={getActiveRoute(routes, pathname)}
                 fixed={fixed}
                 {...rest}
               />
