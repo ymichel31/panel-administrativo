@@ -3,7 +3,6 @@
 import {
   Box,
   Flex,
-  Link,
   useColorModeValue
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
@@ -11,8 +10,6 @@ import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin'
 import { isWindowAvailable } from 'utils/navigation'
 
 export default function AdminNavbar (props: {
-  brandText: string
-  logoText: string
   fixed: boolean
   onOpen: (...args: any[]) => any
 }) {
@@ -29,10 +26,6 @@ export default function AdminNavbar (props: {
     }
   })
 
-  const { brandText } = props
-
-  
-  let mainText = useColorModeValue('navy.700', 'white')
   let navbarPosition = 'fixed' as const
   let navbarFilter = 'none'
   let navbarBackdrop = 'blur(20px)'
@@ -98,40 +91,14 @@ export default function AdminNavbar (props: {
     >
       <Flex
         w='100%'
-        flexDirection={{
-          sm: 'column',
-          md: 'row'
-        }}
-        alignItems={{ xl: 'center' }}
+        alignItems='center'
+        justifyContent='flex-end'
         mb={gap}
       >
-        <Box mb={{ sm: '8px', md: '0px' }}>
-          <Link
-            color={mainText}
-            href='#'
-            bg='inherit'
-            borderRadius='inherit'
-            fontWeight='bold'
-            fontSize='34px'
-            _hover={{ color: { mainText } }}
-            _active={{
-              bg: 'inherit',
-              transform: 'none',
-              borderColor: 'transparent'
-            }}
-            _focus={{
-              boxShadow: 'none'
-            }}
-          >
-            {brandText}
-          </Link>
-        </Box>
-        <Box ms='auto' w={{ sm: '100%', md: 'unset' }}>
-          <AdminNavbarLinks
-            onOpen={props.onOpen}
-            fixed={props.fixed}
-          />
-        </Box>
+        <AdminNavbarLinks
+          onOpen={props.onOpen}
+          fixed={props.fixed}
+        />
       </Flex> 
     </Box>
   )
