@@ -14,15 +14,22 @@ export default function Clientes() {
     '14px 17px 40px 4px rgba(112, 144, 176, 0.06)',
   );
 
-  const filteredClients = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    if (!query) return tableDataComplex;
 
-    return tableDataComplex.filter((client) =>
-      client.first_name.toLowerCase().includes(query) ||
-      client.last_name.toLowerCase().includes(query)
+  const query = search.trim().toLowerCase();
+
+let filteredClients = tableDataComplex;
+
+if (query) {
+  filteredClients = tableDataComplex.filter((client) => {
+    const firstName = client.first_name.toLowerCase();
+    const lastName = client.last_name.toLowerCase();
+
+    return (
+      firstName.includes(query) ||
+      lastName.includes(query)
     );
-  }, [search]);
+  });
+}
 
   return (
     <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
