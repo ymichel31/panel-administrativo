@@ -12,6 +12,8 @@ export function SearchBar (props: {
   children?: JSX.Element
   placeholder?: string
   borderRadius?: string | number
+  value?: string
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
   [x: string]: any
 }) {
   // Pass the computed styles into the `__css` prop
@@ -21,6 +23,8 @@ export function SearchBar (props: {
     children,
     placeholder,
     borderRadius,
+    value,
+    onChange,
     ...rest
   } = props
   // Chakra Color Mode
@@ -55,6 +59,8 @@ export function SearchBar (props: {
         _placeholder={{ color: 'gray.400', fontSize: '14px' }}
         borderRadius={borderRadius ? borderRadius : '30px'}
         placeholder={placeholder ? placeholder : 'Search...'}
+        value={value}
+        onChange={onChange}
       />
     </InputGroup>
   )

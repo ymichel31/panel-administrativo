@@ -2,12 +2,7 @@
 // Chakra Imports
 import {
   Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Flex,
-  Link,
-  Text,
   useColorModeValue
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
@@ -15,10 +10,6 @@ import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin'
 import { isWindowAvailable } from 'utils/navigation'
 
 export default function AdminNavbar (props: {
-  secondary: boolean
-  message: string | boolean
-  brandText: string
-  logoText: string
   fixed: boolean
   onOpen: (...args: any[]) => any
 }) {
@@ -35,11 +26,6 @@ export default function AdminNavbar (props: {
     }
   })
 
-  const { secondary, message, brandText } = props
-
-  // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
-  let mainText = useColorModeValue('navy.700', 'white')
-  let secondaryText = useColorModeValue('gray.700', 'white')
   let navbarPosition = 'fixed' as const
   let navbarFilter = 'none'
   let navbarBackdrop = 'blur(20px)'
@@ -78,7 +64,7 @@ export default function AdminNavbar (props: {
       transition-property='box-shadow, background-color, filter, border'
       transitionTimingFunction='linear, linear, linear, linear'
       alignItems={{ xl: 'center' }}
-      display={secondary ? 'block' : 'flex'}
+      display='flex'
       minH='75px'
       justifyContent={{ xl: 'center' }}
       lineHeight='25.6px'
@@ -105,55 +91,14 @@ export default function AdminNavbar (props: {
     >
       <Flex
         w='100%'
-        flexDirection={{
-          sm: 'column',
-          md: 'row'
-        }}
-        alignItems={{ xl: 'center' }}
+        alignItems='center'
+        justifyContent='flex-end'
         mb={gap}
       >
-        <Box mb={{ sm: '8px', md: '0px' }}>
-          <Breadcrumb>
-            <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-              <BreadcrumbLink href='#' color={secondaryText}>
-                Pages
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-
-            <BreadcrumbItem color={secondaryText} fontSize='sm'>
-              <BreadcrumbLink href='#' color={secondaryText}>
-                {brandText}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
-          {/* Here we create navbar brand, based on route name */}
-          <Link
-            color={mainText}
-            href='#'
-            bg='inherit'
-            borderRadius='inherit'
-            fontWeight='bold'
-            fontSize='34px'
-            _hover={{ color: { mainText } }}
-            _active={{
-              bg: 'inherit',
-              transform: 'none',
-              borderColor: 'transparent'
-            }}
-            _focus={{
-              boxShadow: 'none'
-            }}
-          >
-            {brandText}
-          </Link>
-        </Box>
-        <Box ms='auto' w={{ sm: '100%', md: 'unset' }}>
-          <AdminNavbarLinks
-            onOpen={props.onOpen}
-            secondary={props.secondary}
-            fixed={props.fixed}
-          />
-        </Box>
+        <AdminNavbarLinks
+          onOpen={props.onOpen}
+          fixed={props.fixed}
+        />
       </Flex> 
     </Box>
   )
