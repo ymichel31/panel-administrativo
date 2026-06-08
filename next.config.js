@@ -8,7 +8,7 @@ const nextConfig = {
     return [
       {
         source: '/admin/data-tables',
-        destination: '/admin/clientes',
+        destination: '/admin/clients',
         permanent: true,
       },
     ];
