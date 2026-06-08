@@ -1,7 +1,8 @@
 'use client';
-import { Box, Flex, Heading, SimpleGrid, useColorModeValue } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, SimpleGrid, useColorModeValue } from '@chakra-ui/react';
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
-import { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { useState } from 'react';
 import ComplexTable from 'views/admin/dataTables/components/ComplexTable';
 import tableDataComplex from 'views/admin/dataTables/variables/tableDataComplex';
 
@@ -40,9 +41,20 @@ if (query) {
         justify="space-between"
         gap="20px"
       >
-        <Heading size="lg" color={textColor}>
-          Clientes
-        </Heading>
+        <Flex direction="column" align="flex-start" gap="5">
+          <Heading size="lg" color={textColor}>
+            Clientes
+          </Heading>
+          <Button
+            as={Link}
+            href="/admin/clients/create"
+            variant="brand"
+            fontSize="sm"
+            fontWeight="500"
+          >
+            Nuevo cliente
+          </Button>
+        </Flex>
         <Flex
           bg={menuBg}
           p="10px"
