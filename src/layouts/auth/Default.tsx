@@ -1,88 +1,108 @@
-// Chakra imports
-import { Box, Flex, Icon, useColorModeValue, Text } from '@chakra-ui/react';
-import Footer from 'components/footer/FooterAuth';
-import FixedPlugin from 'components/fixedPlugin/FixedPlugin';
-// Assets
-import { FaChevronLeft } from 'react-icons/fa';
-import Link from 'next/link';
+'use client';
+
+import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
-function AuthIllustration(props: {
+function AuthLayout(props: {
   children: ReactNode;
-  illustrationBackground: string;
+  illustrationBackground?: string;
 }) {
-  const authBg = useColorModeValue('white', 'navy.900');
-  const { children, illustrationBackground } = props;
-  // Chakra color mode
+  const { children } = props;
+
+  const panelBg = useColorModeValue('white', 'navy.900');
+  const brandGradient = useColorModeValue(
+    'linear(to-br, brand.500, brand.700)',
+    'linear(to-br, navy.800, navy.900)',
+  );
+  const taglineColor = useColorModeValue('whiteAlpha.800', 'whiteAlpha.700');
+  const accentDot = useColorModeValue('whiteAlpha.400', 'brand.400');
+  const mobileLogoColor = useColorModeValue('brand.500', 'white');
+
   return (
-    <Flex minW="100vh" w="100%" bg={authBg} position="relative" h="max-content">
+    <Flex minH="100vh" w="100%">
+      {/* Panel izquierdo — branding */}
       <Flex
-        h={{
-          sm: 'initial',
-          md: 'unset',
-          lg: '100vh',
-          xl: '100vh',
-        }}
-        w={{ base: '100vw', md: '100%' }}
-        maxW={{ md: '66%', lg: '1313px' }}
-        mx={{ md: 'auto' }}
-        pt={{ sm: '50px', md: '0px' }}
-        px={{ lg: '30px', xl: '0px' }}
-        ps={{ xl: '70px' }}
-        justifyContent="start"
+        display={{ base: 'none', lg: 'flex' }}
+        w="45%"
+        minH="100vh"
+        bgGradient={brandGradient}
         direction="column"
+        justify="center"
+        px="80px"
+        position="relative"
+        overflow="hidden"
       >
-        <Link
-          href="/admin"
-          style={{
-            width: 'fit-content',
-            marginTop: '40px',
-          }}
-        >
-          <Flex
-            align="center"
-            ps={{ base: '25px', lg: '0px' }}
-            pt={{ lg: '0px', xl: '0px' }}
-            w="fit-content"
-          >
-            <Icon
-              as={FaChevronLeft}
-              me="12px"
-              h="13px"
-              w="8px"
-              color="secondaryGray.600"
-            />
-            <Text ms="0px" fontSize="sm" color="secondaryGray.600">
-              Back to Simmmple
-            </Text>
-          </Flex>
-        </Link>
-        {children}
         <Box
-          display={{ base: 'none', md: 'block' }}
-          h="100%"
-          minH="100vh"
-          w={{ lg: '50vw', '2xl': '44vw' }}
           position="absolute"
-          right="0px"
+          top="-80px"
+          right="-80px"
+          w="320px"
+          h="320px"
+          borderRadius="full"
+          bg={accentDot}
+          opacity={0.15}
+        />
+        <Box
+          position="absolute"
+          bottom="-120px"
+          left="-60px"
+          w="400px"
+          h="400px"
+          borderRadius="full"
+          bg={accentDot}
+          opacity={0.1}
+        />
+
+        <Text
+          fontSize="36px"
+          fontWeight="800"
+          color="white"
+          letterSpacing="-0.5px"
+          mb="16px"
+          position="relative"
         >
-          <Flex
-            style={{ backgroundImage: `url(${illustrationBackground})` }}
-            justify="center"
-            align="end"
-            w="100%"
-            h="100%"
-            bgSize="cover"
-            bgPosition="50%"
-            position="absolute"
-            borderBottomLeftRadius={{ lg: '120px', xl: '200px' }}
-          />
-        </Box>
-        <Footer mb={{ xl: '3vh' }} />
+          Be Strong Unity
+        </Text>
+        <Text
+          fontSize="lg"
+          color={taglineColor}
+          fontWeight="400"
+          maxW="360px"
+          lineHeight="1.7"
+          position="relative"
+        >
+          Accede a tu panel de administración y gestiona todo desde un solo
+          lugar.
+        </Text>
       </Flex>
-      <FixedPlugin />
+
+      {/* Panel derecho — formulario */}
+      <Flex
+        w={{ base: '100%', lg: '55%' }}
+        minH="100vh"
+        bg={panelBg}
+        align="center"
+        justify="center"
+        px={{ base: '24px', md: '48px' }}
+        py={{ base: '48px', md: '0' }}
+      >
+        <Box w="100%" maxW="420px">
+          {/* Logo móvil */}
+          <Text
+            display={{ base: 'block', lg: 'none' }}
+            fontSize="28px"
+            fontWeight="800"
+            color={mobileLogoColor}
+            mb="32px"
+            textAlign="center"
+          >
+            Be Strong Unity
+          </Text>
+          {children}
+        </Box>
+      </Flex>
     </Flex>
   );
 }
 
-export default AuthIllustration;
+export default AuthLayout;
