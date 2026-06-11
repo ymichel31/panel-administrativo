@@ -6,28 +6,19 @@ import {
 	useReactTable
 } from '@tanstack/react-table';
 import { MdEdit } from 'react-icons/md';
-// Custom components
 import Card from 'components/card/Card';
-export type RowObj = {
-	first_name: string;
-	last_name: string;
-	email: string;
-	phone: string;
-	days_available: number;
-	plan_type: string;
-};
+import { Client } from 'types/client';
 
-const columnHelper = createColumnHelper<RowObj>();
+const columnHelper = createColumnHelper<Client>();
 
 export default function ComplexTable(props: {
-	tableData: RowObj[];
-	onEdit?: (client: RowObj) => void;
+	tableData: Client[];
+	onEdit?: (client: Client) => void;
 }) {
 	const { tableData, onEdit } = props;
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 	const brandColor = useColorModeValue('brand.500', 'brand.400');
-	const data = tableData;
 	const columns = [
 		columnHelper.accessor('first_name', {
 			id: 'first_name',
@@ -101,15 +92,15 @@ export default function ComplexTable(props: {
 				</Text>
 			)
 		}),
-		columnHelper.accessor('days_available', {
-			id: 'days_available',
+		columnHelper.accessor('code', {
+			id: 'code',
 			header: () => (
 				<Text
 					w='100%'
 					textAlign='center'
 					fontSize={{ sm: '10px', lg: '12px' }}
 					color='gray.400'>
-					DIAS DISPONIBLES
+					CÓDIGO DE CLIENTE
 				</Text>
 			),
 			cell: (info: any) => (
@@ -120,20 +111,20 @@ export default function ComplexTable(props: {
 				</Flex>
 			)
 		}),
-		columnHelper.accessor('plan_type', {
-			id: 'plan_type',
+		columnHelper.accessor('plan_id', {
+			id: 'plan_id',
 			header: () => (
 				<Text
 					w='100%'
 					textAlign='center'
 					fontSize={{ sm: '10px', lg: '12px' }}
 					color='gray.400'>
-					TIPO DE PLAN
+					PLAN 
 				</Text>
 			),
 			cell: (info) => (
 				<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center' w='100%'>
-					{info.getValue()}
+					{info.getValue() ?? '-'}
 				</Text>
 			)
 		}),
@@ -164,7 +155,7 @@ export default function ComplexTable(props: {
 		})
 	];
 	const table = useReactTable({
-		data,
+		data: tableData,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 	});

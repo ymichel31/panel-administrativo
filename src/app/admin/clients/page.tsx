@@ -7,28 +7,21 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { getClients } from 'services/clients';
+import { Client } from 'types/client';
 import ComplexTable from 'views/admin/dataTables/components/ComplexTable';
-import tableDataComplex from 'views/admin/dataTables/variables/tableDataComplex';
-import { createClient } from 'utils/supabase/client';
 
 export default function Clients() {
+  const router = useRouter();
   const [search, setSearch] = useState('');
-  const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState<Client[]>([]);
 
   useEffect(() => {
-    console.log('fetching clients');
     const fetchClients = async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase.from('clients').select('*');
-      console.log(data);
-      console.log(error);
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(data);
-        setClients(data);
-      }
+      const data = await getClients();
+      setClients(data ?? []);
     };
     fetchClients();
   }, []);
@@ -42,19 +35,22 @@ export default function Clients() {
 
   const query = search.trim().toLowerCase();
 
-  let filteredClients = tableDataComplex;
+  const filteredClients = query
+    ? clients.filter((client) => {
+        const firstName = client.first_name?.toLowerCase() ?? '';
+        const lastName = client.last_name?.toLowerCase() ?? '';
+        const code = client.code?.toLowerCase() ?? '';
 
-  if (query) {
-    filteredClients = tableDataComplex.filter((client) => {
-      const firstName = client.first_name.toLowerCase();
-      const lastName = client.last_name.toLowerCase();
-
-      return firstName.includes(query) || lastName.includes(query);
-    });
-  }
+        return (
+          firstName.includes(query) ||
+          lastName.includes(query) ||
+          code.includes(query)
+        );
+      })
+    : clients;
 
   return (
-    <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
+    <Box>
       <Flex
         mb="20px"
         direction={{ base: 'column', md: 'row' }}
@@ -80,7 +76,10 @@ export default function Clients() {
         columns={{ base: 1 }}
         spacing={{ base: '20px', xl: '20px' }}
       >
-        <ComplexTable tableData={filteredClients} />
+        <ComplexTable
+          tableData={filteredClients}
+          onEdit={(client) => router.push(`/admin/clients/${client.id}/edit`)}
+        />
       </SimpleGrid>
     </Box>
   );
