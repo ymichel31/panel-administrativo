@@ -1,22 +1,10 @@
 'use client';
 
-import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
-function AuthLayout(props: {
-  children: ReactNode;
-  illustrationBackground?: string;
-}) {
+function AuthLayout(props: { children: ReactNode }) {
   const { children } = props;
-
-  const panelBg = useColorModeValue('white', 'navy.900');
-  const brandGradient = useColorModeValue(
-    'linear(to-br, brand.500, brand.700)',
-    'linear(to-br, navy.800, navy.900)',
-  );
-  const taglineColor = useColorModeValue('whiteAlpha.800', 'whiteAlpha.700');
-  const accentDot = useColorModeValue('whiteAlpha.400', 'brand.400');
-  const mobileLogoColor = useColorModeValue('brand.500', 'white');
 
   return (
     <Flex minH="100vh" w="100%">
@@ -25,7 +13,8 @@ function AuthLayout(props: {
         display={{ base: 'none', lg: 'flex' }}
         w="45%"
         minH="100vh"
-        bgGradient={brandGradient}
+        bgGradient="linear(to-br, brand.500, brand.700)"
+        _dark={{ bgGradient: 'linear(to-br, navy.800, navy.900)' }}
         direction="column"
         justify="center"
         px="80px"
@@ -39,7 +28,8 @@ function AuthLayout(props: {
           w="320px"
           h="320px"
           borderRadius="full"
-          bg={accentDot}
+          bg="whiteAlpha.400"
+          _dark={{ bg: 'brand.400' }}
           opacity={0.15}
         />
         <Box
@@ -49,7 +39,8 @@ function AuthLayout(props: {
           w="400px"
           h="400px"
           borderRadius="full"
-          bg={accentDot}
+          bg="whiteAlpha.400"
+          _dark={{ bg: 'brand.400' }}
           opacity={0.1}
         />
 
@@ -65,7 +56,8 @@ function AuthLayout(props: {
         </Text>
         <Text
           fontSize="lg"
-          color={taglineColor}
+          color="whiteAlpha.800"
+          _dark={{ color: 'whiteAlpha.700' }}
           fontWeight="400"
           maxW="360px"
           lineHeight="1.7"
@@ -80,7 +72,8 @@ function AuthLayout(props: {
       <Flex
         w={{ base: '100%', lg: '55%' }}
         minH="100vh"
-        bg={panelBg}
+        bg="white"
+        _dark={{ bg: 'navy.900' }}
         align="center"
         justify="center"
         px={{ base: '24px', md: '48px' }}
@@ -92,7 +85,8 @@ function AuthLayout(props: {
             display={{ base: 'block', lg: 'none' }}
             fontSize="28px"
             fontWeight="800"
-            color={mobileLogoColor}
+            color="brand.500"
+            _dark={{ color: 'white' }}
             mb="32px"
             textAlign="center"
           >
