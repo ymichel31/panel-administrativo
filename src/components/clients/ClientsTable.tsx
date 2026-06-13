@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, Flex, Icon, IconButton, Table, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react';
 import {
 	createColumnHelper,
@@ -5,23 +7,23 @@ import {
 	getCoreRowModel,
 	useReactTable
 } from '@tanstack/react-table';
+import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
 import Card from 'components/card/Card';
 import { Client } from 'types/client';
 
 const columnHelper = createColumnHelper<Client>();
 
-export default function ComplexTable(props: {
+export default function ClientsTable(props: {
 	tableData: Client[];
-	onEdit?: (client: Client) => void;
 }) {
-	const { tableData, onEdit } = props;
+	const { tableData } = props;
+	const router = useRouter();
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 	const brandColor = useColorModeValue('brand.500', 'brand.400');
 	const columns = [
 		columnHelper.accessor('first_name', {
-			id: 'first_name',
 			header: () => (
 				<Text
 					w='100%'
@@ -31,7 +33,7 @@ export default function ComplexTable(props: {
 					NOMBRE
 				</Text>
 			),
-			cell: (info: any) => (
+			cell: (info) => (
 				<Flex w='100%' justify='center' align='center'>
 					<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center'>
 						{info.getValue()}
@@ -40,7 +42,6 @@ export default function ComplexTable(props: {
 			)
 		}),
 		columnHelper.accessor('last_name', {
-			id: 'last_name',
 			header: () => (
 				<Text
 					w='100%'
@@ -50,7 +51,7 @@ export default function ComplexTable(props: {
 					APELLIDO
 				</Text>
 			),
-			cell: (info: any) => (
+			cell: (info) => (
 				<Flex w='100%' justify='center' align='center'>
 					<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center'>
 						{info.getValue()}
@@ -59,7 +60,6 @@ export default function ComplexTable(props: {
 			)
 		}),
 		columnHelper.accessor('email', {
-			id: 'email',
 			header: () => (
 				<Text
 					w='100%'
@@ -76,7 +76,6 @@ export default function ComplexTable(props: {
 			)
 		}),
 		columnHelper.accessor('phone', {
-			id: 'phone',
 			header: () => (
 				<Text
 					w='100%'
@@ -103,7 +102,7 @@ export default function ComplexTable(props: {
 					CÓDIGO DE CLIENTE
 				</Text>
 			),
-			cell: (info: any) => (
+			cell: (info) => (
 				<Flex w='100%' justify='center' align='center'>
 					<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center'>
 						{info.getValue()}
@@ -112,7 +111,6 @@ export default function ComplexTable(props: {
 			)
 		}),
 		columnHelper.accessor('plan_id', {
-			id: 'plan_id',
 			header: () => (
 				<Text
 					w='100%'
@@ -148,7 +146,9 @@ export default function ComplexTable(props: {
 						size='sm'
 						color={brandColor}
 						_hover={{ bg: 'transparent', opacity: 0.8 }}
-						onClick={() => onEdit?.(info.row.original)}
+						onClick={() =>
+							router.push(`/admin/clients/${info.row.original.id}/edit`)
+						}
 					/>
 				</Flex>
 			)
@@ -188,7 +188,7 @@ export default function ComplexTable(props: {
 						))}
 					</Thead>
 					<Tbody>
-						{table.getRowModel().rows.slice(0, 11).map((row) => {
+						{table.getRowModel().rows.map((row) => {
 							return (
 								<Tr key={row.id}>
 									{row.getVisibleCells().map((cell) => {
@@ -212,4 +212,3 @@ export default function ComplexTable(props: {
 		</Card>
 	);
 }
- 
