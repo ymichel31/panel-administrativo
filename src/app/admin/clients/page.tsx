@@ -11,14 +11,13 @@ import {
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Client } from 'types/database';
 import { createClient } from 'utils/supabase/client';
-import ComplexTable, {
-  RowObj,
-} from 'views/admin/dataTables/components/ComplexTable';
+import ComplexTable from 'views/admin/dataTables/components/ComplexTable';
 
-export default function Clientes() {
+export default function Clients() {
   const [search, setSearch] = useState('');
-  const [clients, setClients] = useState<RowObj[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -30,7 +29,7 @@ export default function Clientes() {
         return;
       }
 
-      setClients((data as RowObj[]) ?? []);
+      setClients(data ?? []);
     };
 
     fetchClients();
@@ -52,7 +51,10 @@ export default function Clientes() {
       const firstName = client.first_name.toLowerCase();
       const lastName = client.last_name.toLowerCase();
 
-      return firstName.includes(query) || lastName.includes(query);
+      return (
+        firstName.includes(query) ||
+        lastName.includes(query)
+      );
     });
   }
 

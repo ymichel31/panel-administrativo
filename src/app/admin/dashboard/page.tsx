@@ -24,7 +24,7 @@ import PieCard from 'views/admin/default/components/PieCard';
 import TotalSpent from 'views/admin/default/components/TotalSpent';
 import WeeklyRevenue from 'views/admin/default/components/WeeklyRevenue';
 
-export default function Default() {
+export default function Dashboard() {
   const brandColor = useColorModeValue('brand.500', 'white');
   const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
   const textColor = useColorModeValue('navy.700', 'white');

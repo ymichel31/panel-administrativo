@@ -1,27 +1,4 @@
 'use client';
-/* eslint-disable */
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React from 'react';
 // Chakra imports
 import {
@@ -40,11 +17,11 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 // Custom components
-import { HSeparator } from 'components/separator/Separator';
 import DefaultAuthLayout from 'layouts/auth/Default';
 // Assets
 import Link from 'next/link';
-import { FcGoogle } from 'react-icons/fc';
+import { useRouter } from 'next/navigation';
+import { createClient } from 'utils/supabase/client';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
 
@@ -55,18 +32,38 @@ export default function SignIn() {
   const textColorDetails = useColorModeValue('navy.700', 'secondaryGray.600');
   const textColorBrand = useColorModeValue('brand.500', 'white');
   const brandStars = useColorModeValue('brand.500', 'brand.400');
-  const googleBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.200');
-  const googleText = useColorModeValue('navy.700', 'white');
-  const googleHover = useColorModeValue(
-    { bg: 'gray.200' },
-    { bg: 'whiteAlpha.300' },
-  );
-  const googleActive = useColorModeValue(
-    { bg: 'secondaryGray.300' },
-    { bg: 'whiteAlpha.200' },
-  );
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+
+  // Auth state
+  const router = useRouter();
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [errorMsg, setErrorMsg] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg('');
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      setErrorMsg(error.message);
+      return;
+    }
+
+    router.push('/admin/dashboard');
+    router.refresh();
+  };
+
   return (
     <DefaultAuthLayout illustrationBackground={'/img/auth/auth.png'}>
       <Flex
@@ -107,31 +104,7 @@ export default function SignIn() {
           me="auto"
           mb={{ base: '20px', md: 'auto' }}
         >
-          <Button
-            fontSize="sm"
-            me="0px"
-            mb="26px"
-            py="15px"
-            h="50px"
-            borderRadius="16px"
-            bgColor={googleBg}
-            color={googleText}
-            fontWeight="500"
-            _hover={googleHover}
-            _active={googleActive}
-            _focus={googleActive}
-          >
-            <Icon as={FcGoogle} w="20px" h="20px" me="10px" />
-            Sign in with Google
-          </Button>
-          <Flex align="center" mb="25px">
-            <HSeparator />
-            <Text color="gray.400" mx="14px">
-              or
-            </Text>
-            <HSeparator />
-          </Flex>
-          <FormControl>
+          <FormControl as="form" onSubmit={handleSignIn}>
             <FormLabel
               display="flex"
               ms="4px"
@@ -152,6 +125,8 @@ export default function SignIn() {
               mb="24px"
               fontWeight="500"
               size="lg"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <FormLabel
               ms="4px"
@@ -171,6 +146,8 @@ export default function SignIn() {
                 size="lg"
                 type={show ? 'text' : 'password'}
                 variant="auth"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <InputRightElement display="flex" alignItems="center" mt="4px">
                 <Icon
@@ -181,6 +158,11 @@ export default function SignIn() {
                 />
               </InputRightElement>
             </InputGroup>
+            {errorMsg && (
+              <Text color="red.500" fontSize="sm" mb="12px" ms="4px">
+                {errorMsg}
+              </Text>
+            )}
             <Flex justifyContent="space-between" align="center" mb="24px">
               <FormControl display="flex" alignItems="center">
                 <Checkbox
@@ -210,6 +192,8 @@ export default function SignIn() {
               </Link>
             </Flex>
             <Button
+              type="submit"
+              isLoading={loading}
               fontSize="sm"
               variant="brand"
               fontWeight="500"
