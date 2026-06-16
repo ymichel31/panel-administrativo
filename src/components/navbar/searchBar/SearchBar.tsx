@@ -12,7 +12,9 @@ export function SearchBar (props: {
   children?: JSX.Element
   placeholder?: string
   borderRadius?: string | number
+  name?: string
   value?: string
+  defaultValue?: string
   onChange?: React.ChangeEventHandler<HTMLInputElement>
   [x: string]: any
 }) {
@@ -23,7 +25,9 @@ export function SearchBar (props: {
     children,
     placeholder,
     borderRadius,
+    name,
     value,
+    defaultValue,
     onChange,
     ...rest
   } = props
@@ -59,7 +63,9 @@ export function SearchBar (props: {
         _placeholder={{ color: 'gray.400', fontSize: '14px' }}
         borderRadius={borderRadius ? borderRadius : '30px'}
         placeholder={placeholder ? placeholder : 'Search...'}
+        name={name}
         value={value}
+        defaultValue={defaultValue}
         onChange={onChange}
       />
     </InputGroup>
