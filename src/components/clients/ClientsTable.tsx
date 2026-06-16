@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, Flex, Icon, IconButton, Table, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue } from '@chakra-ui/react';
 import {
 	createColumnHelper,
@@ -5,32 +7,23 @@ import {
 	getCoreRowModel,
 	useReactTable
 } from '@tanstack/react-table';
+import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
-// Custom components
 import Card from 'components/card/Card';
-export type RowObj = {
-	first_name: string;
-	last_name: string;
-	email: string;
-	phone: string;
-	days_available: number;
-	plan_type: string;
-};
+import { Client } from 'types/client';
 
-const columnHelper = createColumnHelper<RowObj>();
+const columnHelper = createColumnHelper<Client>();
 
-export default function ComplexTable(props: {
-	tableData: RowObj[];
-	onEdit?: (client: RowObj) => void;
+export default function ClientsTable(props: {
+	tableData: Client[];
 }) {
-	const { tableData, onEdit } = props;
+	const { tableData } = props;
+	const router = useRouter();
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 	const brandColor = useColorModeValue('brand.500', 'brand.400');
-	const data = tableData;
 	const columns = [
 		columnHelper.accessor('first_name', {
-			id: 'first_name',
 			header: () => (
 				<Text
 					w='100%'
@@ -40,7 +33,7 @@ export default function ComplexTable(props: {
 					NOMBRE
 				</Text>
 			),
-			cell: (info: any) => (
+			cell: (info) => (
 				<Flex w='100%' justify='center' align='center'>
 					<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center'>
 						{info.getValue()}
@@ -49,7 +42,6 @@ export default function ComplexTable(props: {
 			)
 		}),
 		columnHelper.accessor('last_name', {
-			id: 'last_name',
 			header: () => (
 				<Text
 					w='100%'
@@ -59,7 +51,7 @@ export default function ComplexTable(props: {
 					APELLIDO
 				</Text>
 			),
-			cell: (info: any) => (
+			cell: (info) => (
 				<Flex w='100%' justify='center' align='center'>
 					<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center'>
 						{info.getValue()}
@@ -68,7 +60,6 @@ export default function ComplexTable(props: {
 			)
 		}),
 		columnHelper.accessor('email', {
-			id: 'email',
 			header: () => (
 				<Text
 					w='100%'
@@ -85,7 +76,6 @@ export default function ComplexTable(props: {
 			)
 		}),
 		columnHelper.accessor('phone', {
-			id: 'phone',
 			header: () => (
 				<Text
 					w='100%'
@@ -101,18 +91,18 @@ export default function ComplexTable(props: {
 				</Text>
 			)
 		}),
-		columnHelper.accessor('days_available', {
-			id: 'days_available',
+		columnHelper.accessor('code', {
+			id: 'code',
 			header: () => (
 				<Text
 					w='100%'
 					textAlign='center'
 					fontSize={{ sm: '10px', lg: '12px' }}
 					color='gray.400'>
-					DIAS DISPONIBLES
+					CÓDIGO DE CLIENTE
 				</Text>
 			),
-			cell: (info: any) => (
+			cell: (info) => (
 				<Flex w='100%' justify='center' align='center'>
 					<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center'>
 						{info.getValue()}
@@ -120,20 +110,19 @@ export default function ComplexTable(props: {
 				</Flex>
 			)
 		}),
-		columnHelper.accessor('plan_type', {
-			id: 'plan_type',
+		columnHelper.accessor('plan_id', {
 			header: () => (
 				<Text
 					w='100%'
 					textAlign='center'
 					fontSize={{ sm: '10px', lg: '12px' }}
 					color='gray.400'>
-					TIPO DE PLAN
+					PLAN 
 				</Text>
 			),
 			cell: (info) => (
 				<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center' w='100%'>
-					{info.getValue()}
+					{info.getValue() ?? '-'}
 				</Text>
 			)
 		}),
@@ -157,14 +146,16 @@ export default function ComplexTable(props: {
 						size='sm'
 						color={brandColor}
 						_hover={{ bg: 'transparent', opacity: 0.8 }}
-						onClick={() => onEdit?.(info.row.original)}
+						onClick={() =>
+							router.push(`/admin/clients/${info.row.original.id}/edit`)
+						}
 					/>
 				</Flex>
 			)
 		})
 	];
 	const table = useReactTable({
-		data,
+		data: tableData,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 	});
@@ -197,7 +188,7 @@ export default function ComplexTable(props: {
 						))}
 					</Thead>
 					<Tbody>
-						{table.getRowModel().rows.slice(0, 11).map((row) => {
+						{table.getRowModel().rows.map((row) => {
 							return (
 								<Tr key={row.id}>
 									{row.getVisibleCells().map((cell) => {
@@ -221,4 +212,3 @@ export default function ComplexTable(props: {
 		</Card>
 	);
 }
- 

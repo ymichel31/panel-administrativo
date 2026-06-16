@@ -12,7 +12,13 @@ import { breakpoints } from './foundations/breakpoints';
 import { globalStyles } from './styles';
 
 export default extendTheme(
-	{ breakpoints }, // Breakpoints
+	{
+		breakpoints,
+		config: {
+			initialColorMode: 'light',
+			useSystemColorMode: false,
+		},
+	},
 	globalStyles,
 	badgeStyles, // badge styles
 	buttonStyles, // button styles
