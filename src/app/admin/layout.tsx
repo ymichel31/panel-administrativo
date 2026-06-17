@@ -1,23 +1,12 @@
 'use client';
 // Chakra imports
-import {
-  Portal,
-  Box,
-  useDisclosure,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, useColorModeValue } from '@chakra-ui/react';
 import Footer from 'components/footer/FooterAdmin';
 // Layout components
-import Navbar from 'components/navbar/NavbarAdmin';
-import Sidebar from 'components/sidebar/Sidebar';
+import Sidebar, { SidebarResponsive } from 'components/sidebar/Sidebar';
 import { SidebarContext } from 'contexts/SidebarContext';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import routes from 'routes';
-import {
-  getActiveNavbar,
-  getActiveNavbarText,
-  getActiveRoute,
-} from 'utils/navigation';
 
 interface DashboardLayoutProps extends PropsWithChildren {
   [x: string]: any;
@@ -26,11 +15,7 @@ interface DashboardLayoutProps extends PropsWithChildren {
 // Custom Chakra theme
 export default function AdminLayout(props: DashboardLayoutProps) {
   const { children, ...rest } = props;
-  // states and functions
-  const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
-  // functions for changing the states from components
-  const { onOpen } = useDisclosure();
 
   useEffect(() => {
     window.document.documentElement.dir = 'ltr';
@@ -61,27 +46,16 @@ export default function AdminLayout(props: DashboardLayoutProps) {
           transitionProperty="top, bottom, width"
           transitionTimingFunction="linear, linear, ease"
         >
-          <Portal>
-            <Box>
-              <Navbar
-                onOpen={onOpen}
-                logoText={'Be Strong Unity'}
-                brandText={getActiveRoute(routes)}
-                secondary={getActiveNavbar(routes)}
-                message={getActiveNavbarText(routes)}
-                fixed={fixed}
-                {...rest}
-              />
-            </Box>
-          </Portal>
-
           <Box
             mx="auto"
             p={{ base: '20px', md: '30px' }}
             pe="20px"
             minH="100vh"
-            pt="50px"
+            pt={{ base: '20px', md: '30px' }}
           >
+            <Box display={{ base: 'block', xl: 'none' }} mb="20px">
+              <SidebarResponsive routes={routes} />
+            </Box>
             {children}
           </Box>
           <Box>

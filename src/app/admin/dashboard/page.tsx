@@ -2,6 +2,7 @@
 import {
   Box,
   Flex,
+  Heading,
   FormLabel,
   Image,
   Icon,
@@ -23,12 +24,16 @@ import PieCard from 'views/admin/default/components/PieCard';
 import TotalSpent from 'views/admin/default/components/TotalSpent';
 import WeeklyRevenue from 'views/admin/default/components/WeeklyRevenue';
 
-export default function Default() {
+export default function Dashboard() {
   const brandColor = useColorModeValue('brand.500', 'white');
   const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
+  const textColor = useColorModeValue('navy.700', 'white');
 
   return (
     <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
+      <Heading size="lg" color={textColor} mb="20px">
+        Main Dashboard
+      </Heading>
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 3, '2xl': 6 }}
         gap="20px"
