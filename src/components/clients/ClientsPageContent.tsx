@@ -2,12 +2,14 @@
 
 import {
   Box,
+  Button,
   Flex,
   Heading,
   SimpleGrid,
   useColorModeValue,
 } from '@chakra-ui/react';
 import ClientsSearch from 'components/clients/ClientsSearch';
+import Link from 'next/link';
 import ClientsTable from 'components/clients/ClientsTable';
 import { Client } from 'types/client';
 
@@ -31,9 +33,20 @@ export default function ClientsPageContent({
         justify="space-between"
         gap="20px"
       >
-        <Heading size="lg" color={textColor}>
-          Clientes
-        </Heading>
+        <Flex direction="column" align="flex-start" gap="5">
+          <Heading size="lg" color={textColor}>
+            Clientes
+          </Heading>
+          <Button
+            as={Link}
+            href="/admin/clients/create"
+            variant="brand"
+            fontSize="sm"
+            fontWeight="500"
+          >
+            Nuevo cliente
+          </Button>
+        </Flex>
         <ClientsSearch searchQuery={searchQuery} />
       </Flex>
       <SimpleGrid
