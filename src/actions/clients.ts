@@ -22,26 +22,6 @@ export async function getClientsAction(): Promise<Client[]> {
   return data ?? [];
 }
 
-export async function searchClientsAction(text: string): Promise<Client[]> {
-  const query = text.trim();
-  const supabase = await getSupabaseClient();
-  const pattern = `%${query}%`;
-
-  const { data, error } = await supabase
-    .from('clients')
-    .select('*')
-    .or(
-      `first_name.ilike.${pattern},last_name.ilike.${pattern},code.ilike.${pattern}`,
-    );
-
-  if (error) {
-    console.error(error);
-    return [];
-  }
-
-  return data ?? [];
-}
-
 export async function getClientByIdAction(
   id: string,
 ): Promise<Client | null> {
