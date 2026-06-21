@@ -30,7 +30,7 @@ export default function Dashboard() {
   const textColor = useColorModeValue('navy.700', 'white');
 
   return (
-    <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
+    <Box pt={{ base: '20px', md: '0px', xl: '0px' }}>
       <Heading size="lg" color={textColor} mb="20px">
         Main Dashboard
       </Heading>
