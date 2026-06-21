@@ -7,3 +7,11 @@ export type Plan = {
   price: number;
   unlimited: boolean;
 };
+
+export type CreatePlan = {
+  name: string;
+  days: number;
+  total_classes: number;
+  price: number;
+  unlimited: boolean;
+};

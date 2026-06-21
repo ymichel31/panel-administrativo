@@ -1,7 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { Plan } from 'types/plan';
+import { CreatePlan, Plan } from 'types/plan';
 import { createClient } from 'utils/supabase/server';
 
 async function getSupabaseClient() {
@@ -20,4 +20,22 @@ export async function getPlansAction(): Promise<Plan[]> {
   }
 
   return data ?? [];
+}
+
+export async function createPlanAction(form: CreatePlan) {
+  const supabase = await getSupabaseClient();
+
+  const { error } = await supabase.from('plans').insert({
+    name: form.name,
+    days: form.days,
+    total_classes: form.total_classes,
+    price: form.price,
+    unlimited: form.unlimited,
+  });
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
 }
