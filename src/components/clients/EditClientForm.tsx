@@ -8,6 +8,7 @@ import {
   FormLabel,
   Heading,
   Input,
+  Select,
   SimpleGrid,
   Text,
   useColorModeValue,
@@ -17,29 +18,30 @@ import Card from 'components/card/Card';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { updateClientAction } from 'actions/clients';
-import { Client, ClientForm } from 'types/client';
-import { formatDate } from 'utils/date';
+import { Client, UpdateClient } from 'types/client';
+import { Plan } from 'types/plan';
 
 type EditClientFormProps = {
   client: Client;
+  plans: Plan[];
 };
 
 type ClientFormValue = string | number | null;
 
-export default function EditClientForm({ client }: EditClientFormProps) {
+export default function EditClientForm({ client, plans }: EditClientFormProps) {
   const router = useRouter();
   const toast = useToast();
   const textColor = useColorModeValue('navy.700', 'white');
 
-  const [form, setForm] = useState<ClientForm>({
+  const [form, setForm] = useState<UpdateClient>({
     first_name: client.first_name,
     last_name: client.last_name,
     email: client.email,
     phone: client.phone,
     plan_id: client.plan_id,
-    code: client.code,
+    dni: client.dni,
   });
-  
+
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -78,15 +80,13 @@ export default function EditClientForm({ client }: EditClientFormProps) {
           Editar cliente
         </Heading>
 
-        <Button onClick={() => router.push('/admin/clients')}>
-          Volver
-        </Button>
+        <Button onClick={() => router.push('/admin/clients')}>Volver</Button>
       </Flex>
 
       <Card p="30px">
         <FormControl as="form" onSubmit={handleSubmit}>
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing="24px">
-
+            {/* Nombre */}
             <Box>
               <FormLabel color={textColor}>Nombre</FormLabel>
               <Input
@@ -99,6 +99,7 @@ export default function EditClientForm({ client }: EditClientFormProps) {
               />
             </Box>
 
+            {/* Apellido */}
             <Box>
               <FormLabel color={textColor}>Apellido</FormLabel>
               <Input
@@ -111,6 +112,7 @@ export default function EditClientForm({ client }: EditClientFormProps) {
               />
             </Box>
 
+            {/* Email */}
             <Box>
               <FormLabel color={textColor}>Email</FormLabel>
               <Input
@@ -123,6 +125,7 @@ export default function EditClientForm({ client }: EditClientFormProps) {
               />
             </Box>
 
+            {/* Teléfono */}
             <Box>
               <FormLabel color={textColor}>Teléfono</FormLabel>
               <Input
@@ -135,26 +138,28 @@ export default function EditClientForm({ client }: EditClientFormProps) {
               />
             </Box>
 
+            {/* DNI */}
             <Box>
-              <FormLabel color={textColor}>Código</FormLabel>
+              <FormLabel color={textColor}>DNI</FormLabel>
               <Input
                 variant="auth"
                 fontSize="sm"
                 size="lg"
                 color={textColor}
-                value={form.code}
-                onChange={(e) => handleChange('code', e.target.value)}
+                value={form.dni}
+                onChange={(e) => handleChange('dni', Number(e.target.value))}
               />
             </Box>
 
+            {/* Plan */}
             <Box>
               <FormLabel color={textColor}>Plan</FormLabel>
-              <Input
+              <Select
                 variant="auth"
                 fontSize="sm"
                 size="lg"
                 color={textColor}
-                type="number"
+                placeholder="Selecciona un plan"
                 value={form.plan_id ?? ''}
                 onChange={(e) => {
                   if (e.target.value === '') {
@@ -163,33 +168,14 @@ export default function EditClientForm({ client }: EditClientFormProps) {
                     handleChange('plan_id', Number(e.target.value));
                   }
                 }}
-              />
+              >
+                {plans.map((plan) => (
+                  <option key={plan.id} value={plan.id}>
+                    {plan.name}
+                  </option>
+                ))}
+              </Select>
             </Box>
-
-            <Box>
-              <FormLabel color={textColor}>Creado</FormLabel>
-              <Input
-                variant="auth"
-                fontSize="sm"
-                size="lg"
-                color={textColor}
-                readOnly
-                value={formatDate(client.created_at)}
-              />
-            </Box>
-
-            <Box>
-              <FormLabel color={textColor}>Actualizado</FormLabel>
-              <Input
-                variant="auth"
-                fontSize="sm"
-                size="lg"
-                color={textColor}
-                readOnly
-                value={formatDate(client.updated_at)}
-              />
-            </Box>
-
           </SimpleGrid>
 
           {errorMsg && (
@@ -199,7 +185,10 @@ export default function EditClientForm({ client }: EditClientFormProps) {
           )}
 
           <Flex mt="30px" justify="flex-end" gap="12px">
-            <Button variant="outline" onClick={() => router.push('/admin/clients')}>
+            <Button
+              variant="outline"
+              onClick={() => router.push('/admin/clients')}
+            >
               Cancelar
             </Button>
 
@@ -207,7 +196,6 @@ export default function EditClientForm({ client }: EditClientFormProps) {
               Guardar
             </Button>
           </Flex>
-
         </FormControl>
       </Card>
     </Box>

@@ -8,36 +8,26 @@ import {
   SimpleGrid,
   useColorModeValue,
 } from '@chakra-ui/react';
-import ClientsSearch from 'components/clients/ClientsSearch';
+import PlansSearch from 'components/plans/PlansSearch';
+import PlansTable from 'components/plans/PlansTable';
 import Link from 'next/link';
-import ClientsTable from 'components/clients/ClientsTable';
 import { useState } from 'react';
-import { Client } from 'types/client';
+import { Plan } from 'types/plan';
 
-type ClientsPageContentProps = {
-  clients: Client[];
+type PlansPageContentProps = {
+  plans: Plan[];
 };
 
-export default function ClientsPageContent({
-  clients,
-}: ClientsPageContentProps) {
+export default function PlansPageContent({ plans }: PlansPageContentProps) {
   const [search, setSearch] = useState('');
 
   const query = search.trim().toLowerCase();
-  let filteredClients = clients;
+  let filteredPlans = plans;
 
   if (query) {
-    filteredClients = clients.filter((client) => {
-      const firstName = client.first_name.toLowerCase();
-      const lastName = client.last_name.toLowerCase();
-      const dni = client.dni.toString().toLowerCase();
-
-      return (
-        firstName.includes(query) ||
-        lastName.includes(query) ||
-        dni.includes(query)
-      );
-    });
+    filteredPlans = plans.filter((plan) =>
+      plan.name.toLowerCase().includes(query),
+    );
   }
 
   return (
@@ -51,26 +41,26 @@ export default function ClientsPageContent({
       >
         <Flex direction="column" align="flex-start" gap="5">
           <Heading size="lg" color={useColorModeValue('navy.700', 'white')}>
-            Clientes
+            Planes
           </Heading>
           <Button
             as={Link}
-            href="/admin/clients/create"
+            href="/admin/plans/create"
             variant="brand"
             fontSize="sm"
             fontWeight="500"
           >
-            Nuevo cliente
+            Nuevo plan
           </Button>
         </Flex>
-        <ClientsSearch value={search} onChange={setSearch} />
+        <PlansSearch value={search} onChange={setSearch} />
       </Flex>
       <SimpleGrid
         mb="20px"
         columns={{ base: 1 }}
         spacing={{ base: '20px', xl: '20px' }}
       >
-        <ClientsTable tableData={filteredClients} />
+        <PlansTable tableData={filteredPlans} />
       </SimpleGrid>
     </Box>
   );

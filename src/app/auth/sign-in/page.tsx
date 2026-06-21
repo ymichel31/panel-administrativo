@@ -59,7 +59,7 @@ export default function SignIn() {
       return;
     }
 
-    router.push('/admin/dashboard');
+    router.push('/admin/clients');
     router.refresh();
   };
 

@@ -39,18 +39,19 @@ export const updateSession = async (request: NextRequest) => {
 
   const { pathname } = request.nextUrl;
   const isAuthRoute = pathname.startsWith('/auth');
+  const isPublicRoute = pathname.startsWith('/check-in');
 
   // No session and trying to access a protected route -> go to sign-in
-  if (!user && !isAuthRoute) {
+  if (!user && !isAuthRoute && !isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = '/auth/sign-in';
     return NextResponse.redirect(url);
   }
 
-  // Already authenticated but on an auth route -> go to dashboard
+  // Already authenticated but on an auth route -> go to clients
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = '/admin/dashboard';
+    url.pathname = '/admin/clients';
     return NextResponse.redirect(url);
   }
 

@@ -1,7 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { Client, ClientForm } from 'types/client';
+import { Client, CreateClient, UpdateClient } from 'types/client';
 import { createClient } from 'utils/supabase/server';
 
 async function getSupabaseClient() {
@@ -12,56 +12,36 @@ async function getSupabaseClient() {
 export async function getClientsAction(): Promise<Client[]> {
   const supabase = await getSupabaseClient();
 
-  const { data, error } = await supabase.from('clients').select('*');
+  const { data, error } = await supabase.rpc(
+    'get_clients_subscription_overview',
+  );
 
   if (error) {
     console.error(error);
     return [];
   }
-
   return data ?? [];
 }
 
-export async function searchClientsAction(text: string): Promise<Client[]> {
-  const query = text.trim();
-  const supabase = await getSupabaseClient();
-  const pattern = `%${query}%`;
-
-  const { data, error } = await supabase
-    .from('clients')
-    .select('*')
-    .or(
-      `first_name.ilike.${pattern},last_name.ilike.${pattern},code.ilike.${pattern}`,
-    );
-
-  if (error) {
-    console.error(error);
-    return [];
-  }
-
-  return data ?? [];
-}
-
-export async function getClientByIdAction(
-  id: string,
-): Promise<Client | null> {
+export async function getClientByIdAction(id: string): Promise<Client | null> {
   const supabase = await getSupabaseClient();
 
-  const { data, error } = await supabase
-    .from('clients')
-    .select('*')
-    .eq('id', id)
-    .maybeSingle();
+  const { data, error } = await supabase.rpc(
+    'get_clients_subscription_overview_by_client',
+    {
+      p_client_id: id,
+    },
+  );
 
   if (error) {
     console.error(error);
     return null;
   }
 
-  return data;
+  return data[0];
 }
 
-export async function updateClientAction(id: string, form: ClientForm) {
+export async function updateClientAction(id: number, form: UpdateClient) {
   const supabase = await getSupabaseClient();
 
   const { error } = await supabase
@@ -72,10 +52,29 @@ export async function updateClientAction(id: string, form: ClientForm) {
       email: form.email,
       phone: form.phone,
       plan_id: form.plan_id,
-      code: form.code,
+      dni: form.dni,
       updated_at: new Date().toISOString(),
     })
     .eq('id', id);
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function createClientAction(form: CreateClient) {
+  const supabase = await getSupabaseClient();
+
+  const { error } = await supabase.from('clients').insert({
+    first_name: form.first_name,
+    last_name: form.last_name,
+    email: form.email,
+    phone: form.phone,
+    plan_id: form.plan_id,
+    dni: form.dni,
+  });
 
   if (error) {
     return { success: false, error: error.message };

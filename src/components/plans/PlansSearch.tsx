@@ -3,12 +3,12 @@
 import { Flex, useColorModeValue } from '@chakra-ui/react';
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
 
-type ClientsSearchProps = {
+type PlansSearchProps = {
   value: string;
   onChange: (value: string) => void;
 };
 
-export default function ClientsSearch({ value, onChange }: ClientsSearchProps) {
+export default function PlansSearch({ value, onChange }: PlansSearchProps) {
   return (
     <Flex
       align="center"
@@ -28,7 +28,7 @@ export default function ClientsSearch({ value, onChange }: ClientsSearchProps) {
         w={{ base: '100%', md: '260px' }}
         borderRadius="full"
         background="transparent"
-        placeholder="Buscar clientes..."
+        placeholder="Buscar planes..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
