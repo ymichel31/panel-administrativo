@@ -1,105 +1,52 @@
 /* eslint-disable */
-// Chakra Imports
-import {
-  Box,
-  Flex,
-  useColorModeValue
-} from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
-import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin'
-import { isWindowAvailable } from 'utils/navigation'
+import { Box, Flex } from '@chakra-ui/react';
+import AdminNavbarLinks from 'components/navbar/NavbarLinksAdmin';
 
-export default function AdminNavbar (props: {
-  fixed: boolean
-  onOpen: (...args: any[]) => any
+export default function AdminNavbar(props: {
+  fixed: boolean;
+  onOpen: (...args: any[]) => any;
 }) {
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    if (isWindowAvailable()) {
-      // You now have access to `window`
-      window.addEventListener('scroll', changeNavbar)
-
-      return () => {
-        window.removeEventListener('scroll', changeNavbar)
-      }
-    }
-  })
-
-  let navbarPosition = 'fixed' as const
-  let navbarFilter = 'none'
-  let navbarBackdrop = 'blur(20px)'
-  let navbarShadow = 'none'
-  let navbarBg = useColorModeValue(
-    'rgba(244, 247, 254, 0.2)',
-    'rgba(11,20,55,0.5)'
-  )
-  let navbarBorder = 'transparent'
-  let secondaryMargin = '0px'
-  let paddingX = '15px'
-  let gap = '0px'
-  const changeNavbar = () => {
-    if (isWindowAvailable() && window.scrollY > 1) {
-      setScrolled(true)
-    } else {
-      setScrolled(false)
-    }
-  }
+  let navbarPosition = 'fixed' as const;
+  let paddingX = '15px';
+  let gap = '0px';
 
   return (
     <Box
       position={navbarPosition}
-      boxShadow={navbarShadow}
-      bg={navbarBg}
-      borderColor={navbarBorder}
-      filter={navbarFilter}
-      backdropFilter={navbarBackdrop}
-      backgroundPosition='center'
-      backgroundSize='cover'
-      borderRadius='16px'
-      borderWidth='1.5px'
-      borderStyle='solid'
-      transitionDelay='0s, 0s, 0s, 0s'
-      transitionDuration=' 0.25s, 0.25s, 0.25s, 0s'
-      transition-property='box-shadow, background-color, filter, border'
-      transitionTimingFunction='linear, linear, linear, linear'
+      zIndex="1100"
+      bg="transparent"
+      boxShadow="none"
+      backdropFilter="none"
+      border="none"
       alignItems={{ xl: 'center' }}
-      display='flex'
-      minH='75px'
+      display="flex"
+      minH="75px"
       justifyContent={{ xl: 'center' }}
-      lineHeight='25.6px'
-      mx='auto'
-      mt={secondaryMargin}
-      pb='8px'
+      lineHeight="25.6px"
+      mx="auto"
+      mt="0px"
+      pb="8px"
       right={{ base: '12px', md: '30px', lg: '30px', xl: '30px' }}
       px={{
         sm: paddingX,
-        md: '10px'
+        md: '10px',
       }}
       ps={{
-        xl: '12px'
+        xl: '12px',
       }}
-      pt='8px'
+      pt="8px"
       top={{ base: '12px', md: '16px', xl: '18px' }}
       w={{
         base: 'calc(100vw - 6%)',
         md: 'calc(100vw - 8%)',
         lg: 'calc(100vw - 6%)',
         xl: 'calc(100vw - 350px)',
-        '2xl': 'calc(100vw - 365px)'
+        '2xl': 'calc(100vw - 365px)',
       }}
     >
-      <Flex
-        w='100%'
-        alignItems='center'
-        justifyContent='flex-end'
-        mb={gap}
-      >
-        <AdminNavbarLinks
-          onOpen={props.onOpen}
-          fixed={props.fixed}
-        />
-      </Flex> 
+      <Flex w="100%" alignItems="center" justifyContent="flex-end" mb={gap}>
+        <AdminNavbarLinks onOpen={props.onOpen} fixed={props.fixed} />
+      </Flex>
     </Box>
-  )
+  );
 }

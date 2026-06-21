@@ -75,7 +75,7 @@ export default function CreateClientForm({ plans }: CreateClientFormProps) {
   };
 
   return (
-    <Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
+    <Box pt={{ base: '20px', md: '0px', xl: '0px' }}>
       <SimpleGrid
         mb="20px"
         columns={{ base: 1 }}
