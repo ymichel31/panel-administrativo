@@ -14,6 +14,17 @@ import { Client } from 'types/client';
 
 const columnHelper = createColumnHelper<Client>();
 
+const columnMinWidths: Record<string, string> = {
+	first_name: '130px',
+	last_name: '130px',
+	phone: '140px',
+	dni: '130px',
+	plan_name: '150px',
+	is_active: '130px',
+	classes_remaining: '150px',
+	actions: '90px',
+};
+
 export default function ClientsTable(props: {
 	tableData: Client[];
 }) {
@@ -34,8 +45,14 @@ export default function ClientsTable(props: {
 				</Text>
 			),
 			cell: (info) => (
-				<Flex w='100%' justify='center' align='center'>
-					<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center'>
+				<Flex w='100%' justify='center' align='center' px='2px'>
+					<Text
+						color={textColor}
+						fontSize='sm'
+						fontWeight='700'
+						textAlign='center'
+						whiteSpace='normal'
+						wordBreak='break-word'>
 						{info.getValue()}
 					</Text>
 				</Flex>
@@ -52,27 +69,17 @@ export default function ClientsTable(props: {
 				</Text>
 			),
 			cell: (info) => (
-				<Flex w='100%' justify='center' align='center'>
-					<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center'>
+				<Flex w='100%' justify='center' align='center' px='2px'>
+					<Text
+						color={textColor}
+						fontSize='sm'
+						fontWeight='700'
+						textAlign='center'
+						whiteSpace='normal'
+						wordBreak='break-word'>
 						{info.getValue()}
 					</Text>
 				</Flex>
-			)
-		}),
-		columnHelper.accessor('email', {
-			header: () => (
-				<Text
-					w='100%'
-					textAlign='center'
-					fontSize={{ sm: '10px', lg: '12px' }}
-					color='gray.400'>
-					EMAIL
-				</Text>
-			),
-			cell: (info) => (
-				<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center' w='100%'>
-					{info.getValue()}
-				</Text>
 			)
 		}),
 		columnHelper.accessor('phone', {
@@ -91,38 +98,72 @@ export default function ClientsTable(props: {
 				</Text>
 			)
 		}),
-		columnHelper.accessor('code', {
-			id: 'code',
+		columnHelper.accessor('dni', {
 			header: () => (
 				<Text
 					w='100%'
 					textAlign='center'
 					fontSize={{ sm: '10px', lg: '12px' }}
 					color='gray.400'>
-					CÓDIGO DE CLIENTE
+					DOCUMENTO
 				</Text>
 			),
 			cell: (info) => (
-				<Flex w='100%' justify='center' align='center'>
-					<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center'>
-						{info.getValue()}
-					</Text>
-				</Flex>
+				<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center' w='100%'>
+					{info.getValue()}
+				</Text>
 			)
 		}),
-		columnHelper.accessor('plan_id', {
+		columnHelper.accessor('plan_name', {
 			header: () => (
 				<Text
 					w='100%'
 					textAlign='center'
 					fontSize={{ sm: '10px', lg: '12px' }}
 					color='gray.400'>
-					PLAN 
+					PLAN
 				</Text>
 			),
 			cell: (info) => (
 				<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center' w='100%'>
 					{info.getValue() ?? '-'}
+				</Text>
+			)
+		}),
+		columnHelper.accessor('is_active', {
+			header: () => (
+				<Text
+					w='100%'
+					textAlign='center'
+					fontSize={{ sm: '10px', lg: '12px' }}
+					color='gray.400'>
+					SUSCRIPCIÓN
+				</Text>
+			),
+			cell: (info) => (
+				<Text
+					color={info.getValue() ? 'green.500' : 'red.400'}
+					fontSize='sm'
+					fontWeight='700'
+					textAlign='center'
+					w='100%'>
+					{info.getValue() ? 'Activa' : 'Inactiva'}
+				</Text>
+			)
+		}),
+		columnHelper.accessor('classes_remaining', {
+			header: () => (
+				<Text
+					w='100%'
+					textAlign='center'
+					fontSize={{ sm: '10px', lg: '12px' }}
+					color='gray.400'>
+					CLASES RESTANTES
+				</Text>
+			),
+			cell: (info) => (
+				<Text color={textColor} fontSize='sm' fontWeight='700' textAlign='center' w='100%'>
+					{info.getValue()}
 				</Text>
 			)
 		}),
@@ -160,18 +201,25 @@ export default function ClientsTable(props: {
 		getCoreRowModel: getCoreRowModel(),
 	});
 	return (
-		<Card flexDirection='column' w='100%' px='0px' overflowX={{ sm: 'scroll', lg: 'hidden' }}>
+		<Card flexDirection='column' w='100%' px='0px' overflowX='auto'>
 			<Box>
-				<Table variant='simple' color='gray.500' mb='24px' mt="12px">
+				<Table variant='simple' color='gray.500' mb='24px' mt="12px" layout='fixed' minW='1040px'>
 					<Thead>
 						{table.getHeaderGroups().map((headerGroup) => (
 							<Tr key={headerGroup.id}>
 								{headerGroup.headers.map((header) => {
+									const minW = columnMinWidths[header.column.id] ?? '120px';
+									const isNameColumn =
+										header.column.id === 'first_name' ||
+										header.column.id === 'last_name';
 									return (
 										<Th
 											key={header.id}
 											colSpan={header.colSpan}
-											pe='10px'
+											pe={isNameColumn ? '4px' : '10px'}
+											px={isNameColumn ? '4px' : '8px'}
+											minW={minW}
+											w={minW}
 											borderColor={borderColor}
 											textAlign='center'>
 											<Flex
@@ -192,11 +240,18 @@ export default function ClientsTable(props: {
 							return (
 								<Tr key={row.id}>
 									{row.getVisibleCells().map((cell) => {
+										const minW = columnMinWidths[cell.column.id] ?? '120px';
+										const isNameColumn =
+											cell.column.id === 'first_name' ||
+											cell.column.id === 'last_name';
 										return (
 											<Td
 												key={cell.id}
 												fontSize={{ sm: '14px' }}
-												minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+												minW={minW}
+												w={minW}
+												px={isNameColumn ? '4px' : '8px'}
+												py='16px'
 												borderColor='transparent'
 												textAlign='center'>
 												{flexRender(cell.column.columnDef.cell, cell.getContext())}
