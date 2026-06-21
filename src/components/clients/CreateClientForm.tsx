@@ -18,27 +18,27 @@ import Card from 'components/card/Card';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { createClientAction } from 'actions/clients';
-import { ClientForm } from 'types/client';
+import { CreateClient } from 'types/client';
 import { Plan } from 'types/plan';
 
 type CreateClientFormProps = {
   plans: Plan[];
 };
 
-const emptyForm: ClientForm = {
+const emptyForm: CreateClient = {
   first_name: '',
   last_name: '',
   email: '',
   phone: '',
-  plan_id: null,
-  code: '',
+  plan_id: 0,
+  dni: 0,
 };
 
 export default function CreateClientForm({ plans }: CreateClientFormProps) {
   const router = useRouter();
   const toast = useToast();
 
-  const [form, setForm] = useState<ClientForm>(emptyForm);
+  const [form, setForm] = useState<CreateClient>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -48,7 +48,14 @@ export default function CreateClientForm({ plans }: CreateClientFormProps) {
     setSaving(true);
     setErrorMsg('');
 
-    const result = await createClientAction(form);
+    const result = await createClientAction({
+      first_name: form.first_name,
+      last_name: form.last_name,
+      email: form.email,
+      phone: form.phone,
+      plan_id: form.plan_id,
+      dni: form.dni,
+    });
 
     setSaving(false);
 
@@ -75,7 +82,11 @@ export default function CreateClientForm({ plans }: CreateClientFormProps) {
         spacing={{ base: '20px', xl: '20px' }}
       >
         <Card flexDirection="column" w="100%" maxW="640px" p="30px">
-          <Heading color={useColorModeValue('navy.700', 'white')} fontSize="28px" mb="8px">
+          <Heading
+            color={useColorModeValue('navy.700', 'white')}
+            fontSize="28px"
+            mb="8px"
+          >
             Nuevo cliente
           </Heading>
 
@@ -198,19 +209,20 @@ export default function CreateClientForm({ plans }: CreateClientFormProps) {
                 color={useColorModeValue('navy.700', 'white')}
                 mb="8px"
               >
-                Código de cliente
+                DNI
               </FormLabel>
 
               <Input
                 variant="auth"
                 fontSize="sm"
-                placeholder="Ej: 123456"
+                placeholder="CC: 123456"
                 size="lg"
-                value={form.code}
+                type="number"
+                value={form.dni}
                 onChange={(e) =>
                   setForm({
                     ...form,
-                    code: e.target.value,
+                    dni: Number(e.target.value),
                   })
                 }
               />
@@ -273,9 +285,7 @@ export default function CreateClientForm({ plans }: CreateClientFormProps) {
                 variant="outline"
                 fontSize="sm"
                 fontWeight="500"
-                onClick={() =>
-                  router.push('/admin/clients')
-                }
+                onClick={() => router.push('/admin/clients')}
               >
                 Cancelar
               </Button>

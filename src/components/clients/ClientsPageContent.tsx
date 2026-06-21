@@ -30,12 +30,12 @@ export default function ClientsPageContent({
     filteredClients = clients.filter((client) => {
       const firstName = client.first_name.toLowerCase();
       const lastName = client.last_name.toLowerCase();
-      const code = client.code.toLowerCase();
+      const dni = client.dni.toString().toLowerCase();
 
       return (
         firstName.includes(query) ||
         lastName.includes(query) ||
-        code.includes(query)
+        dni.includes(query)
       );
     });
   }

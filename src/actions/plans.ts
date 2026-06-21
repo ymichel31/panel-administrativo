@@ -12,10 +12,7 @@ async function getSupabaseClient() {
 export async function getPlansAction(): Promise<Plan[]> {
   const supabase = await getSupabaseClient();
 
-  const { data, error } = await supabase
-    .from('plans')
-    .select('id, name')
-    .order('name');
+  const { data, error } = await supabase.from('plans').select('*').order('id');
 
   if (error) {
     console.error(error);

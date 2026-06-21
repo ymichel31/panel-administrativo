@@ -1,7 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { Client, ClientForm } from 'types/client';
+import { Client, CreateClient, UpdateClient } from 'types/client';
 import { createClient } from 'utils/supabase/server';
 
 async function getSupabaseClient() {
@@ -12,36 +12,36 @@ async function getSupabaseClient() {
 export async function getClientsAction(): Promise<Client[]> {
   const supabase = await getSupabaseClient();
 
-  const { data, error } = await supabase.from('clients').select('*');
+  const { data, error } = await supabase.rpc(
+    'get_clients_subscription_overview',
+  );
 
   if (error) {
     console.error(error);
     return [];
   }
-
   return data ?? [];
 }
 
-export async function getClientByIdAction(
-  id: string,
-): Promise<Client | null> {
+export async function getClientByIdAction(id: string): Promise<Client | null> {
   const supabase = await getSupabaseClient();
 
-  const { data, error } = await supabase
-    .from('clients')
-    .select('*')
-    .eq('id', id)
-    .maybeSingle();
+  const { data, error } = await supabase.rpc(
+    'get_clients_subscription_overview_by_client',
+    {
+      p_client_id: id,
+    },
+  );
 
   if (error) {
     console.error(error);
     return null;
   }
 
-  return data;
+  return data[0];
 }
 
-export async function updateClientAction(id: string, form: ClientForm) {
+export async function updateClientAction(id: number, form: UpdateClient) {
   const supabase = await getSupabaseClient();
 
   const { error } = await supabase
@@ -52,7 +52,7 @@ export async function updateClientAction(id: string, form: ClientForm) {
       email: form.email,
       phone: form.phone,
       plan_id: form.plan_id,
-      code: form.code,
+      dni: form.dni,
       updated_at: new Date().toISOString(),
     })
     .eq('id', id);
@@ -64,7 +64,7 @@ export async function updateClientAction(id: string, form: ClientForm) {
   return { success: true };
 }
 
-export async function createClientAction(form: ClientForm) {
+export async function createClientAction(form: CreateClient) {
   const supabase = await getSupabaseClient();
 
   const { error } = await supabase.from('clients').insert({
@@ -73,7 +73,7 @@ export async function createClientAction(form: ClientForm) {
     email: form.email,
     phone: form.phone,
     plan_id: form.plan_id,
-    code: form.code,
+    dni: form.dni,
   });
 
   if (error) {

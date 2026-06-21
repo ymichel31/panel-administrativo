@@ -1,13 +1,34 @@
 export type Client = {
-  id: string;
+  id: number;
+  dni: number;
+  email: string;
+  phone: string;
+  status: string;
+  end_date: string;
+  is_active: boolean;
+  last_name: string;
+  plan_id: number;
+  plan_name: string;
+  first_name: string;
+  start_date: string;
+  classes_used: number;
+  classes_remaining: number;
+};
+
+export type CreateClient = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  dni: number;
+  phone: string;
+  plan_id: number;
+};
+
+export type UpdateClient = {
   first_name: string;
   last_name: string;
   email: string;
   phone: string;
-  plan_id: number | null;
-  code: string;
-  created_at?: string;
-  updated_at?: string;
+  plan_id: number;
+  dni: number;
 };
-
-export type ClientForm = Omit<Client, 'id' | 'created_at' | 'updated_at'>;
