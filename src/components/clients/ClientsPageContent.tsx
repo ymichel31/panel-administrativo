@@ -11,18 +11,34 @@ import {
 import ClientsSearch from 'components/clients/ClientsSearch';
 import Link from 'next/link';
 import ClientsTable from 'components/clients/ClientsTable';
+import { useState } from 'react';
 import { Client } from 'types/client';
 
 type ClientsPageContentProps = {
   clients: Client[];
-  searchQuery: string;
 };
 
 export default function ClientsPageContent({
   clients,
-  searchQuery,
 }: ClientsPageContentProps) {
-  const textColor = useColorModeValue('navy.700', 'white');
+  const [search, setSearch] = useState('');
+
+  const query = search.trim().toLowerCase();
+  let filteredClients = clients;
+
+  if (query) {
+    filteredClients = clients.filter((client) => {
+      const firstName = client.first_name.toLowerCase();
+      const lastName = client.last_name.toLowerCase();
+      const code = client.code.toLowerCase();
+
+      return (
+        firstName.includes(query) ||
+        lastName.includes(query) ||
+        code.includes(query)
+      );
+    });
+  }
 
   return (
     <Box>
@@ -34,7 +50,7 @@ export default function ClientsPageContent({
         gap="20px"
       >
         <Flex direction="column" align="flex-start" gap="5">
-          <Heading size="lg" color={textColor}>
+          <Heading size="lg" color={useColorModeValue('navy.700', 'white')}>
             Clientes
           </Heading>
           <Button
@@ -47,14 +63,14 @@ export default function ClientsPageContent({
             Nuevo cliente
           </Button>
         </Flex>
-        <ClientsSearch searchQuery={searchQuery} />
+        <ClientsSearch value={search} onChange={setSearch} />
       </Flex>
       <SimpleGrid
         mb="20px"
         columns={{ base: 1 }}
         spacing={{ base: '20px', xl: '20px' }}
       >
-        <ClientsTable tableData={clients} />
+        <ClientsTable tableData={filteredClients} />
       </SimpleGrid>
     </Box>
   );
