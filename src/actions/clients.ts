@@ -63,3 +63,22 @@ export async function updateClientAction(id: string, form: ClientForm) {
 
   return { success: true };
 }
+
+export async function createClientAction(form: ClientForm) {
+  const supabase = await getSupabaseClient();
+
+  const { error } = await supabase.from('clients').insert({
+    first_name: form.first_name,
+    last_name: form.last_name,
+    email: form.email,
+    phone: form.phone,
+    plan_id: form.plan_id,
+    code: form.code,
+  });
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
