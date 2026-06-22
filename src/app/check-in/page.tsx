@@ -12,13 +12,24 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
+import { checkInClassAction } from 'actions/check-in';
+import { useRouter } from 'next/navigation';
 
 export default function CheckInPage() {
-  const [code, setCode] = useState('');
+  const [dni, setDni] = useState<number>(null);
+  const router = useRouter();
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // TODO: validar código y registrar asistencia
+    const result = await checkInClassAction(dni);
+
+    if (!result.success) {
+      router.push('/check-in/no-available');
+      return;
+    }
+
+    sessionStorage.setItem('checkin_ok', '1');
+    router.push('/check-in/success');
   };
 
   return (
@@ -95,8 +106,8 @@ export default function CheckInPage() {
             mb="24px"
             size="lg"
             h="56px"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
+            value={dni ?? ''}
+            onChange={(e) => setDni(Number(e.target.value))}
             inputMode="numeric"
             autoComplete="off"
           />
