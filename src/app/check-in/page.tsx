@@ -37,21 +37,31 @@ export default function CheckInPage() {
       direction="column"
       minH="100dvh"
       w="100%"
-      maxW="480px"
-      mx="auto"
-      bg={useColorModeValue('white', 'navy.900')}
+      align="center"
+      justify="center"
+      px="24px"
+      bg={useColorModeValue('gray.50', 'navy.900')}
     >
       <Flex
         direction="column"
-        justify="center"
-        px="24px"
-        pt="48px"
-        pb="40px"
-        bgGradient="linear(to-br, brand.500, brand.700)"
-        _dark={{ bgGradient: 'linear(to-br, navy.800, navy.900)' }}
-        position="relative"
+        w="100%"
+        maxW="480px"
+        bg={useColorModeValue('white', 'navy.900')}
+        borderRadius="20px"
         overflow="hidden"
+        boxShadow="0 10px 40px rgba(0, 0, 0, 0.08)"
       >
+        <Flex
+          direction="column"
+          justify="center"
+          px="24px"
+          pt="48px"
+          pb="40px"
+          bgGradient="linear(to-br, brand.500, brand.700)"
+          _dark={{ bgGradient: 'linear(to-br, navy.800, navy.900)' }}
+          position="relative"
+          overflow="hidden"
+        >
         <Box
           position="absolute"
           top="-60px"
@@ -78,17 +88,11 @@ export default function CheckInPage() {
           lineHeight="1.6"
           position="relative"
         >
-          Ingresa tu código de cliente para continuar.
+          Ingresa tu Documento de Identidad para continuar.
         </Text>
-      </Flex>
+        </Flex>
 
-      <Flex
-        flex="1"
-        direction="column"
-        px="24px"
-        py="32px"
-        bg={useColorModeValue('white', 'navy.900')}
-      >
+        <Flex direction="column" px="24px" py="32px">
         <FormControl as="form" onSubmit={handleSubmit}>
           <FormLabel
             fontSize="sm"
@@ -96,13 +100,13 @@ export default function CheckInPage() {
             color={useColorModeValue('navy.700', 'white')}
             mb="8px"
           >
-            Código de cliente
+            Documento de Identidad
           </FormLabel>
           <Input
             isRequired
             variant="auth"
             fontSize="md"
-            placeholder="Ej: 123456"
+            placeholder="Ej: 12345678"
             mb="24px"
             size="lg"
             h="56px"
@@ -123,6 +127,7 @@ export default function CheckInPage() {
             Continuar
           </Button>
         </FormControl>
+        </Flex>
       </Flex>
     </Flex>
   );
