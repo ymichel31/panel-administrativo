@@ -31,7 +31,7 @@ const emptyForm: CreateClient = {
   email: '',
   phone: '',
   plan_id: 0,
-  dni: 0,
+  dni: null,
 };
 
 export default function CreateClientForm({ plans }: CreateClientFormProps) {
@@ -218,11 +218,11 @@ export default function CreateClientForm({ plans }: CreateClientFormProps) {
                 placeholder="CC: 123456"
                 size="lg"
                 type="number"
-                value={form.dni}
+                value={form.dni ?? ''}
                 onChange={(e) =>
                   setForm({
                     ...form,
-                    dni: Number(e.target.value),
+                    dni: e.target.value === '' ? null : Number(e.target.value),
                   })
                 }
               />
