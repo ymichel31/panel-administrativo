@@ -24,7 +24,10 @@ export async function checkInClassAction(dni: number) {
     .from('subscriptions')
     .select('*')
     .eq('client_id', client.id)
-    .single();
+    .gte('end_date', new Date().toISOString())
+    .order('end_date', { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
   if (subscriptionError) {
     console.error('Error getting subscription', subscriptionError);
@@ -33,10 +36,6 @@ export async function checkInClassAction(dni: number) {
 
   if (!subscription) {
     return { success: false, error: 'Suscripción no encontrada' };
-  }
-
-  if (subscription.end_date < new Date().toISOString()) {
-    return { success: false, error: 'Suscripción expirada' };
   }
 
   const { data: classAttendance, error: classAttendanceError } = await supabase
