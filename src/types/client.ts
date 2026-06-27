@@ -19,7 +19,7 @@ export type CreateClient = {
   first_name: string;
   last_name: string;
   email: string;
-  dni: number;
+  dni: number | null;
   phone: string;
   plan_id: number;
 };
@@ -30,5 +30,5 @@ export type UpdateClient = {
   email: string;
   phone: string;
   plan_id: number;
-  dni: number;
+  dni: number | null;
 };
