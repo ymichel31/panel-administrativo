@@ -79,7 +79,7 @@ export async function updateClientAction(id: number, form: UpdateClient) {
 
   const startDate = new Date().toISOString();
   const endDate = new Date(
-    new Date().setDate(new Date().getDate() + plan.days),
+    new Date().setDate(new Date().getDate() + 30),
   ).toISOString();
 
   const { error: subscriptionError } = await supabase
@@ -139,7 +139,7 @@ export async function createClientAction(form: CreateClient) {
 
   const startDate = new Date().toISOString();
   const endDate = new Date(
-    new Date().setDate(new Date().getDate() + plan.days),
+    new Date().setDate(new Date().getDate() + 30),
   ).toISOString();
 
   const { error: subscriptionError } = await supabase
