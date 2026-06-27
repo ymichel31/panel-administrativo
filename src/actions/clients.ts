@@ -44,7 +44,7 @@ export async function getClientByIdAction(id: string): Promise<Client | null> {
 export async function updateClientAction(id: number, form: UpdateClient) {
   const supabase = await getSupabaseClient();
 
-  const { error } = await supabase
+  const { data: client, error: updateClientError } = await supabase
     .from('clients')
     .update({
       first_name: form.first_name,
@@ -55,10 +55,45 @@ export async function updateClientAction(id: number, form: UpdateClient) {
       dni: form.dni,
       updated_at: new Date().toISOString(),
     })
-    .eq('id', id);
+    .eq('id', id)
+    .select()
+    .single();
 
-  if (error) {
-    return { success: false, error: error.message };
+  if (updateClientError) {
+    return { success: false, error: updateClientError.message };
+  }
+
+  const { data: plan, error: planError } = await supabase
+    .from('plans')
+    .select('*')
+    .eq('id', form.plan_id)
+    .single();
+
+  if (planError) {
+    return { success: false, error: planError.message };
+  }
+
+  if (!plan) {
+    return { success: false, error: 'Plan no encontrado' };
+  }
+
+  const startDate = new Date().toISOString();
+  const endDate = new Date(
+    new Date().setDate(new Date().getDate() + plan.days),
+  ).toISOString();
+
+  const { error: subscriptionError } = await supabase
+    .from('subscriptions')
+    .insert({
+      client_id: client.id,
+      plan_id: form.plan_id,
+      start_date: startDate,
+      end_date: endDate,
+      total_classes: plan.unlimited ? 99 : plan.total_classes, // TODO:  99 is a magic number for unlimited plans
+    });
+
+  if (subscriptionError) {
+    return { success: false, error: subscriptionError.message };
   }
 
   return { success: true };
@@ -104,7 +139,7 @@ export async function createClientAction(form: CreateClient) {
 
   const startDate = new Date().toISOString();
   const endDate = new Date(
-    new Date().setDate(new Date().getDate() + 30),
+    new Date().setDate(new Date().getDate() + plan.days),
   ).toISOString();
 
   const { error: subscriptionError } = await supabase
