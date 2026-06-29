@@ -29,6 +29,26 @@ export default function CheckInPage() {
     }
 
     sessionStorage.setItem('checkin_ok', '1');
+
+    const hasName = 'firstName' in result;
+    const hasClasses = 'classesRemaining' in result;
+
+    if (hasName && hasClasses) {
+      let unlimited = false;
+
+      if ('unlimited' in result) {
+        unlimited = result.unlimited as boolean;
+      }
+
+      const checkInResult = {
+        firstName: result.firstName,
+        classesRemaining: result.classesRemaining,
+        unlimited,
+      };
+
+      sessionStorage.setItem('checkin_result', JSON.stringify(checkInResult));
+    }
+
     router.push('/check-in/success');
   };
 

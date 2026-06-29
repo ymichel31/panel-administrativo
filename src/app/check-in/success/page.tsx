@@ -14,9 +14,40 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+type CheckInResult = {
+  firstName: string;
+  classesRemaining: number;
+  unlimited: boolean;
+};
+
+function readCheckInResult(): CheckInResult | null {
+  const storedResult = sessionStorage.getItem('checkin_result');
+
+  if (!storedResult) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(storedResult) as CheckInResult;
+  } catch {
+    return null;
+  }
+}
+
+function getSuccessMessage(result: CheckInResult) {
+  if (result.unlimited) {
+    return `${result.firstName}, tu asistencia se registró correctamente. Tu plan incluye clases ilimitadas.`;
+  }
+
+  return `${result.firstName}, tu asistencia se registró correctamente. Te quedan ${result.classesRemaining} clases disponibles.`;
+}
+
 export default function CheckInSuccessPage() {
   const router = useRouter();
   const [allowed, setAllowed] = useState(false);
+  const [checkInResult, setCheckInResult] = useState<CheckInResult | null>(
+    null,
+  );
   const cardBg = useColorModeValue('white', 'navy.800');
   const headingColor = useColorModeValue('navy.700', 'white');
   const textColor = useColorModeValue('gray.500', 'whiteAlpha.700');
@@ -34,7 +65,10 @@ export default function CheckInSuccessPage() {
         router.replace('/check-in');
         return;
       }
+
+      setCheckInResult(readCheckInResult());
       sessionStorage.removeItem('checkin_ok');
+      sessionStorage.removeItem('checkin_result');
       setAllowed(true);
     }, 3000);
 
@@ -86,12 +120,13 @@ export default function CheckInSuccessPage() {
           letterSpacing="-0.5px"
           mb="12px"
         >
-          ¡Listo!
+          ¡Listo, {checkInResult?.firstName}!
         </Heading>
 
         <Text color={textColor} fontSize="md" lineHeight="1.6" mb="32px">
-          Tu asistencia se registró correctamente. Puedes seguir y disfrutar de
-          tu clase.
+          {checkInResult
+            ? getSuccessMessage(checkInResult)
+            : 'Tu asistencia se registró correctamente. Puedes seguir y disfrutar de tu clase.'}
         </Text>
 
         <Button
