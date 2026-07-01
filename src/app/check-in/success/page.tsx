@@ -11,12 +11,28 @@ import {
 } from '@chakra-ui/react';
 import { MdCheckCircle } from 'react-icons/md';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+function getSuccessMessage(
+  firstName: string,
+  classesRemaining: number,
+  unlimited: boolean,
+) {
+  if (unlimited) {
+    return `${firstName}, tu asistencia se registró correctamente. Tu plan incluye clases ilimitadas.`;
+  }
+
+  return `${firstName}, tu asistencia se registró correctamente. Te quedan ${classesRemaining} clases disponibles.`;
+}
+
 export default function CheckInSuccessPage() {
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const [allowed, setAllowed] = useState(false);
+  const firstName = searchParams.get('firstName');
+  const classesRemaining = searchParams.get('classesRemaining');
+  const unlimited = searchParams.get('unlimited');
+
   const cardBg = useColorModeValue('white', 'navy.800');
   const headingColor = useColorModeValue('navy.700', 'white');
   const textColor = useColorModeValue('gray.500', 'whiteAlpha.700');
@@ -29,21 +45,12 @@ export default function CheckInSuccessPage() {
       return;
     }
 
-    let interval = setInterval(() => {
-      if (sessionStorage.getItem('checkin_ok') !== '1') {
-        router.replace('/check-in');
-        return;
-      }
+    let interval = setTimeout(() => {
       sessionStorage.removeItem('checkin_ok');
-      setAllowed(true);
-    }, 3000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [router]);
-
-  if (!allowed) {
-    return null;
-  }
 
   return (
     <Flex
@@ -86,12 +93,15 @@ export default function CheckInSuccessPage() {
           letterSpacing="-0.5px"
           mb="12px"
         >
-          ¡Listo!
+          ¡Listo, {firstName}!
         </Heading>
 
         <Text color={textColor} fontSize="md" lineHeight="1.6" mb="32px">
-          Tu asistencia se registró correctamente. Puedes seguir y disfrutar de
-          tu clase.
+          {getSuccessMessage(
+            firstName,
+            parseInt(classesRemaining),
+            unlimited === 'true',
+          )}
         </Text>
 
         <Button
