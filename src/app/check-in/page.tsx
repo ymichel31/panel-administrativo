@@ -30,26 +30,13 @@ export default function CheckInPage() {
 
     sessionStorage.setItem('checkin_ok', '1');
 
-    const hasName = 'firstName' in result;
-    const hasClasses = 'classesRemaining' in result;
+    const { firstName, classesRemaining, unlimited } = result.data;
 
-    if (hasName && hasClasses) {
-      let unlimited = false;
-
-      if ('unlimited' in result) {
-        unlimited = result.unlimited as boolean;
-      }
-
-      const checkInResult = {
-        firstName: result.firstName,
-        classesRemaining: result.classesRemaining,
-        unlimited,
-      };
-
-      sessionStorage.setItem('checkin_result', JSON.stringify(checkInResult));
-    }
-
-    router.push('/check-in/success');
+    router.push(
+      `/check-in/success?firstName=${firstName}&classesRemaining=${classesRemaining}&unlimited=${
+        unlimited ? 'true' : 'false'
+      }`,
+    );
   };
 
   return (
@@ -82,71 +69,71 @@ export default function CheckInPage() {
           position="relative"
           overflow="hidden"
         >
-        <Box
-          position="absolute"
-          top="-60px"
-          right="-60px"
-          w="200px"
-          h="200px"
-          borderRadius="full"
-          bg="whiteAlpha.300"
-          opacity={0.2}
-        />
-        <Heading
-          color="white"
-          fontSize="32px"
-          fontWeight="800"
-          letterSpacing="-0.5px"
-          mb="12px"
-          position="relative"
-        >
-          Be Strong Unity
-        </Heading>
-        <Text
-          color="whiteAlpha.800"
-          fontSize="md"
-          lineHeight="1.6"
-          position="relative"
-        >
-          Ingresa tu Documento de Identidad para continuar.
-        </Text>
+          <Box
+            position="absolute"
+            top="-60px"
+            right="-60px"
+            w="200px"
+            h="200px"
+            borderRadius="full"
+            bg="whiteAlpha.300"
+            opacity={0.2}
+          />
+          <Heading
+            color="white"
+            fontSize="32px"
+            fontWeight="800"
+            letterSpacing="-0.5px"
+            mb="12px"
+            position="relative"
+          >
+            Be Strong Unity
+          </Heading>
+          <Text
+            color="whiteAlpha.800"
+            fontSize="md"
+            lineHeight="1.6"
+            position="relative"
+          >
+            Ingresa tu Documento de Identidad para continuar.
+          </Text>
         </Flex>
 
         <Flex direction="column" px="24px" py="32px">
-        <FormControl as="form" onSubmit={handleSubmit}>
-          <FormLabel
-            fontSize="sm"
-            fontWeight="600"
-            color={useColorModeValue('navy.700', 'white')}
-            mb="8px"
-          >
-            Documento de Identidad
-          </FormLabel>
-          <Input
-            isRequired
-            variant="auth"
-            fontSize="md"
-            placeholder="Ej: 12345678"
-            mb="24px"
-            size="lg"
-            h="56px"
-            value={dni ?? ''}
-            onChange={(e) => setDni(Number(e.target.value))}
-            inputMode="numeric"
-            autoComplete="off"
-          />
+          <FormControl as="form" onSubmit={handleSubmit}>
+            <FormLabel
+              fontSize="sm"
+              fontWeight="600"
+              color={useColorModeValue('navy.700', 'white')}
+              mb="8px"
+            >
+              Documento de Identidad
+            </FormLabel>
+            <Input
+              isRequired
+              variant="auth"
+              fontSize="md"
+              placeholder="Ej: 12345678"
+              mb="24px"
+              size="lg"
+              h="56px"
+              value={dni ?? ''}
+              onChange={(e) => setDni(Number(e.target.value))}
+              inputMode="numeric"
+              autoComplete="off"
+            />
 
-          <Button
-            type="submit"
-            fontSize="md"
-            variant="brand"
-            fontWeight="600"
-            w="100%"
-            h="56px"
-          >
-            Continuar
-          </Button>
-        </FormControl>
+            <Button
+              type="submit"
+              fontSize="md"
+              variant="brand"
+              fontWeight="600"
+              w="100%"
+              h="56px"
+            >
+              Continuar
+            </Button>
+          </FormControl>
         </Flex>
       </Flex>
     </Flex>

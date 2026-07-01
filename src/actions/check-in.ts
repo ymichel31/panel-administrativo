@@ -70,5 +70,12 @@ export async function checkInClassAction(dni: number) {
     return { success: false, error: insertClassAttendanceError.message };
   }
 
-  return { success: true };
+  return {
+    success: true,
+    data: {
+      firstName: client.first_name,
+      classesRemaining: totalClassRemaining,
+      unlimited: subscription.unlimited,
+    },
+  };
 }
