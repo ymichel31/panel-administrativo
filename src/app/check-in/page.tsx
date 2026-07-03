@@ -16,12 +16,12 @@ import { checkInClassAction } from 'actions/check-in';
 import { useRouter } from 'next/navigation';
 
 export default function CheckInPage() {
-  const [dni, setDni] = useState<number>(null);
+  const [dni, setDni] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const result = await checkInClassAction(dni);
+    const result = await checkInClassAction(Number(dni));
 
     if (!result.success) {
       router.push('/check-in/no-available');
@@ -117,8 +117,8 @@ export default function CheckInPage() {
               mb="24px"
               size="lg"
               h="56px"
-              value={dni ?? ''}
-              onChange={(e) => setDni(Number(e.target.value))}
+              value={dni}
+              onChange={(e) => setDni(e.target.value.replace(/\D/g, ''))}
               inputMode="numeric"
               autoComplete="off"
             />
