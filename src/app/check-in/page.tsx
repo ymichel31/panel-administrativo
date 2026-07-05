@@ -24,18 +24,14 @@ export default function CheckInPage() {
     const result = await checkInClassAction(Number(dni));
 
     if (!result.success) {
-      router.push('/check-in/no-available');
+      router.push('/check-in/result');
       return;
     }
 
-    sessionStorage.setItem('checkin_ok', '1');
-
-    const { firstName, classesRemaining, unlimited } = result.data;
+    const { subscriptionId, attendanceId, token } = result.data;
 
     router.push(
-      `/check-in/success?firstName=${firstName}&classesRemaining=${classesRemaining}&unlimited=${
-        unlimited ? 'true' : 'false'
-      }`,
+      `/check-in/result?sid=${subscriptionId}&aid=${attendanceId}&t=${token}`,
     );
   };
 
