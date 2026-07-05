@@ -1,5 +1,6 @@
 'use server';
 
+import { createCheckInToken, verifyCheckInToken } from 'utils/check-in-token';
 import { createAnonClient } from 'utils/supabase/anon';
 
 export async function checkInClassAction(dni: number) {
@@ -55,27 +56,98 @@ export async function checkInClassAction(dni: number) {
     return { success: false, error: 'No hay clases disponibles' };
   }
 
-  const { error: insertClassAttendanceError } = await supabase
+  const { data: attendance, error: insertClassAttendanceError } = await supabase
     .from('class_attendances')
     .insert({
       subscription_id: subscription.id,
       attended_at: new Date().toISOString(),
-    });
+    })
+    .select('id')
+    .single();
 
-  if (insertClassAttendanceError) {
+  if (insertClassAttendanceError || !attendance) {
     console.error(
       'Error inserting class attendance',
       insertClassAttendanceError,
     );
-    return { success: false, error: insertClassAttendanceError.message };
+    return {
+      success: false,
+      error:
+        insertClassAttendanceError?.message ?? 'Error al registrar asistencia',
+    };
   }
+
+  const token = createCheckInToken(subscription.id, attendance.id);
+
+  return {
+    success: true,
+    data: {
+      subscriptionId: subscription.id,
+      attendanceId: attendance.id,
+      token,
+    },
+  };
+}
+
+export async function getCheckInResultAction(
+  subscriptionId: number,
+  attendanceId: number,
+  token: string,
+) {
+  if (!verifyCheckInToken(subscriptionId, attendanceId, token)) {
+    return { success: false };
+  }
+
+  const supabase = createAnonClient();
+
+  const { data: attendance, error: attendanceError } = await supabase
+    .from('class_attendances')
+    .select('id, subscription_id')
+    .eq('id', attendanceId)
+    .eq('subscription_id', subscriptionId)
+    .maybeSingle();
+
+  if (attendanceError || !attendance) {
+    return { success: false };
+  }
+
+  const { data: subscription, error: subscriptionError } = await supabase
+    .from('subscriptions')
+    .select('*, clients(first_name), plans(unlimited)')
+    .eq('id', subscriptionId)
+    .gte('end_date', new Date().toISOString())
+    .maybeSingle();
+
+  if (subscriptionError || !subscription) {
+    return { success: false };
+  }
+
+  const { data: classAttendances, error: classAttendancesError } =
+    await supabase
+      .from('class_attendances')
+      .select('id')
+      .eq('subscription_id', subscriptionId);
+
+  if (classAttendancesError) {
+    return { success: false };
+  }
+
+  const client = subscription.clients;
+  const plan = subscription.plans;
+
+  if (!client || !client.first_name) {
+    return { success: false };
+  }
+
+  const classesRemaining =
+    subscription.total_classes - (classAttendances?.length ?? 0);
 
   return {
     success: true,
     data: {
       firstName: client.first_name,
-      classesRemaining: totalClassRemaining,
-      unlimited: subscription.unlimited,
+      classesRemaining,
+      unlimited: plan?.unlimited ?? false,
     },
   };
 }
