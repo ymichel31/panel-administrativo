@@ -148,6 +148,8 @@ export async function getCheckInResultAction(
       firstName: client.first_name,
       classesRemaining,
       unlimited: plan?.unlimited ?? false,
+      startDate: subscription.start_date,
+      endDate: subscription.end_date,
     },
   };
 }

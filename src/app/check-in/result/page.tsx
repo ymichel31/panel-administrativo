@@ -33,6 +33,8 @@ export default async function CheckInResultPage({
       firstName={result.data.firstName}
       classesRemaining={result.data.classesRemaining}
       unlimited={result.data.unlimited}
+      startDate={result.data.startDate}
+      endDate={result.data.endDate}
     />
   );
 }
