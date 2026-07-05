@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { MdCheckCircle } from 'react-icons/md';
 import NextLink from 'next/link';
+import { formatDate } from 'utils/date';
 
 function getSuccessMessage(
   firstName: string,
@@ -28,18 +29,25 @@ type CheckInSuccessSummaryProps = {
   firstName: string;
   classesRemaining: number;
   unlimited: boolean;
+  startDate: string;
+  endDate: string;
 };
 
 export default function CheckInSuccessSummary({
   firstName,
   classesRemaining,
   unlimited,
+  startDate,
+  endDate,
 }: CheckInSuccessSummaryProps) {
   const cardBg = useColorModeValue('white', 'navy.800');
   const headingColor = useColorModeValue('navy.700', 'white');
   const textColor = useColorModeValue('gray.500', 'whiteAlpha.700');
   const pageBg = useColorModeValue('gray.50', 'navy.900');
   const iconBg = useColorModeValue('green.50', 'green.900');
+  const validityBg = useColorModeValue('gray.50', 'whiteAlpha.50');
+  const validityBorderColor = useColorModeValue('gray.100', 'whiteAlpha.100');
+  const validityMutedColor = useColorModeValue('gray.400', 'whiteAlpha.600');
 
   return (
     <Flex
@@ -85,9 +93,71 @@ export default function CheckInSuccessSummary({
           ¡Listo, {firstName}!
         </Heading>
 
-        <Text color={textColor} fontSize="md" lineHeight="1.6" mb="32px">
+        <Text color={textColor} fontSize="md" lineHeight="1.6" mb="24px">
           {getSuccessMessage(firstName, classesRemaining, unlimited)}
         </Text>
+
+        <Box
+          w="100%"
+          bg={validityBg}
+          border="1px solid"
+          borderColor={validityBorderColor}
+          borderRadius="12px"
+          px="16px"
+          py="16px"
+          mb="32px"
+        >
+          <Text
+            color={textColor}
+            fontSize="sm"
+            fontWeight="600"
+            mb="12px"
+          >
+            Vigencia de tu suscripción
+          </Text>
+
+          <Flex align="center" justify="center" gap="12px" wrap="wrap">
+            <Box textAlign="center">
+              <Text
+                color={validityMutedColor}
+                fontSize="xs"
+                fontWeight="500"
+                mb="4px"
+              >
+                Desde
+              </Text>
+              <Text
+                color={textColor}
+                fontSize="md"
+                fontWeight="600"
+              >
+                {formatDate(startDate)}
+              </Text>
+            </Box>
+
+            <Text color={validityMutedColor} fontSize="md">
+              —
+            </Text>
+
+            <Box textAlign="center">
+              <Text
+                color={validityMutedColor}
+                fontSize="xs"
+                fontWeight="500"
+                mb="4px"
+              >
+                Hasta
+              </Text>
+              <Text
+                color={textColor}
+                fontSize="md"
+                fontWeight="600"
+              >
+                {formatDate(endDate)}
+              </Text>
+            </Box>
+          </Flex>
+        </Box>
 
         <Button
           as={NextLink}
