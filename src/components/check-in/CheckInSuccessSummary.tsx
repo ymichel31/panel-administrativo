@@ -9,15 +9,37 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { MdErrorOutline } from 'react-icons/md';
+import { MdCheckCircle } from 'react-icons/md';
 import NextLink from 'next/link';
 
-export default function CheckInNoAvailablePage() {
+function getSuccessMessage(
+  firstName: string,
+  classesRemaining: number,
+  unlimited: boolean,
+) {
+  if (unlimited) {
+    return `${firstName}, tu asistencia se registró correctamente. Tu plan incluye clases ilimitadas.`;
+  }
+
+  return `${firstName}, tu asistencia se registró correctamente. Te quedan ${classesRemaining} clases disponibles.`;
+}
+
+type CheckInSuccessSummaryProps = {
+  firstName: string;
+  classesRemaining: number;
+  unlimited: boolean;
+};
+
+export default function CheckInSuccessSummary({
+  firstName,
+  classesRemaining,
+  unlimited,
+}: CheckInSuccessSummaryProps) {
   const cardBg = useColorModeValue('white', 'navy.800');
   const headingColor = useColorModeValue('navy.700', 'white');
   const textColor = useColorModeValue('gray.500', 'whiteAlpha.700');
   const pageBg = useColorModeValue('gray.50', 'navy.900');
-  const iconBg = useColorModeValue('orange.50', 'orange.900');
+  const iconBg = useColorModeValue('green.50', 'green.900');
 
   return (
     <Flex
@@ -50,7 +72,7 @@ export default function CheckInNoAvailablePage() {
           borderRadius="full"
           bg={iconBg}
         >
-          <Icon as={MdErrorOutline} w="52px" h="52px" color="orange.400" />
+          <Icon as={MdCheckCircle} w="52px" h="52px" color="green.400" />
         </Flex>
 
         <Heading
@@ -60,12 +82,11 @@ export default function CheckInNoAvailablePage() {
           letterSpacing="-0.5px"
           mb="12px"
         >
-          Sin clases disponibles
+          ¡Listo, {firstName}!
         </Heading>
 
         <Text color={textColor} fontSize="md" lineHeight="1.6" mb="32px">
-          No tienes clases disponibles o tu suscripción ya expiró. Por favor,
-          valida tu estado con el administrador para continuar.
+          {getSuccessMessage(firstName, classesRemaining, unlimited)}
         </Text>
 
         <Button
@@ -77,7 +98,7 @@ export default function CheckInNoAvailablePage() {
           w="100%"
           h="56px"
         >
-          Volver al inicio
+          Esta bien, gracias
         </Button>
       </Box>
     </Flex>

@@ -9,48 +9,15 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { useEffect } from 'react';
-import { MdCheckCircle } from 'react-icons/md';
+import { MdErrorOutline } from 'react-icons/md';
 import NextLink from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
 
-function getSuccessMessage(
-  firstName: string,
-  classesRemaining: number,
-  unlimited: boolean,
-) {
-  if (unlimited) {
-    return `${firstName}, tu asistencia se registró correctamente. Tu plan incluye clases ilimitadas.`;
-  }
-
-  return `${firstName}, tu asistencia se registró correctamente. Te quedan ${classesRemaining} clases disponibles.`;
-}
-
-export default function CheckInSuccessContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const firstName = searchParams.get('firstName');
-  const classesRemaining = searchParams.get('classesRemaining');
-  const unlimited = searchParams.get('unlimited');
-
+export default function CheckInUnavailable() {
   const cardBg = useColorModeValue('white', 'navy.800');
   const headingColor = useColorModeValue('navy.700', 'white');
   const textColor = useColorModeValue('gray.500', 'whiteAlpha.700');
   const pageBg = useColorModeValue('gray.50', 'navy.900');
-  const iconBg = useColorModeValue('green.50', 'green.900');
-
-  useEffect(() => {
-    if (sessionStorage.getItem('checkin_ok') !== '1') {
-      router.replace('/check-in');
-      return;
-    }
-
-    const timeout = setTimeout(() => {
-      sessionStorage.removeItem('checkin_ok');
-    }, 10000);
-
-    return () => clearTimeout(timeout);
-  }, [router]);
+  const iconBg = useColorModeValue('orange.50', 'orange.900');
 
   return (
     <Flex
@@ -83,7 +50,7 @@ export default function CheckInSuccessContent() {
           borderRadius="full"
           bg={iconBg}
         >
-          <Icon as={MdCheckCircle} w="52px" h="52px" color="green.400" />
+          <Icon as={MdErrorOutline} w="52px" h="52px" color="orange.400" />
         </Flex>
 
         <Heading
@@ -93,15 +60,12 @@ export default function CheckInSuccessContent() {
           letterSpacing="-0.5px"
           mb="12px"
         >
-          ¡Listo, {firstName}!
+          Sin clases disponibles
         </Heading>
 
         <Text color={textColor} fontSize="md" lineHeight="1.6" mb="32px">
-          {getSuccessMessage(
-            firstName,
-            parseInt(classesRemaining),
-            unlimited === 'true',
-          )}
+          No tienes clases disponibles o tu suscripción ya expiró. Por favor,
+          valida tu estado con el administrador para continuar.
         </Text>
 
         <Button
@@ -113,7 +77,7 @@ export default function CheckInSuccessContent() {
           w="100%"
           h="56px"
         >
-          Esta bien, gracias
+          Volver al inicio
         </Button>
       </Box>
     </Flex>
