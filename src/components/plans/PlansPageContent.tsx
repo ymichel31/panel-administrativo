@@ -8,6 +8,7 @@ import {
   SimpleGrid,
   useColorModeValue,
 } from '@chakra-ui/react';
+import DeletePlanModal from 'components/plans/DeletePlanModal';
 import PlansSearch from 'components/plans/PlansSearch';
 import PlansTable from 'components/plans/PlansTable';
 import Link from 'next/link';
@@ -20,6 +21,15 @@ type PlansPageContentProps = {
 
 export default function PlansPageContent({ plans }: PlansPageContentProps) {
   const [search, setSearch] = useState('');
+  const [planToDelete, setPlanToDelete] = useState<Plan | null>(null);
+
+  const handleDeleteClick = (plan: Plan) => {
+    setPlanToDelete(plan);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setPlanToDelete(null);
+  };
 
   const query = search.trim().toLowerCase();
   let filteredPlans = plans;
@@ -60,8 +70,17 @@ export default function PlansPageContent({ plans }: PlansPageContentProps) {
         columns={{ base: 1 }}
         spacing={{ base: '20px', xl: '20px' }}
       >
-        <PlansTable tableData={filteredPlans} />
+        <PlansTable
+          tableData={filteredPlans}
+          onDeleteClick={handleDeleteClick}
+        />
       </SimpleGrid>
+
+      <DeletePlanModal
+        plan={planToDelete}
+        isOpen={planToDelete !== null}
+        onClose={handleCloseDeleteModal}
+      />
     </Box>
   );
 }

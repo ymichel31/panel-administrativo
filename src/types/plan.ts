@@ -15,3 +15,5 @@ export type CreatePlan = {
   price: number;
   unlimited: boolean;
 };
+
+export type UpdatePlan = CreatePlan;
