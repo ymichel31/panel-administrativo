@@ -5,3 +5,9 @@ export type Attendance = {
   last_name: string;
   attended_at: string;
 };
+
+export type CreateManualAttendance = {
+  client_id: number;
+  date: string;
+  time: string;
+};

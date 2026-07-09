@@ -31,7 +31,7 @@ export default function AttendancesSearch({
         w={{ base: '100%', md: '260px' }}
         borderRadius="full"
         background="transparent"
-        placeholder="Buscar asistencias..."
+        placeholder="Buscar por nombre..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />

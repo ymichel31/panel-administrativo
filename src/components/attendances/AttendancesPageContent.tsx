@@ -2,13 +2,15 @@
 
 import {
   Box,
+  Button,
   Flex,
   Heading,
   SimpleGrid,
   useColorModeValue,
 } from '@chakra-ui/react';
+import AttendancesLog from 'components/attendances/AttendancesLog';
 import AttendancesSearch from 'components/attendances/AttendancesSearch';
-import AttendancesTable from 'components/attendances/AttendancesTable';
+import Link from 'next/link';
 import { useState } from 'react';
 import { Attendance } from 'types/attendance';
 
@@ -42,9 +44,20 @@ export default function AttendancesPageContent({
         justify="space-between"
         gap="20px"
       >
-        <Heading size="lg" color={useColorModeValue('navy.700', 'white')}>
-          Asistencias
-        </Heading>
+        <Flex direction="column" align="flex-start" gap="5">
+          <Heading size="lg" color={useColorModeValue('navy.700', 'white')}>
+            Asistencias
+          </Heading>
+          <Button
+            as={Link}
+            href="/admin/attendances/create"
+            variant="brand"
+            fontSize="sm"
+            fontWeight="500"
+          >
+            Registrar asistencia
+          </Button>
+        </Flex>
         <AttendancesSearch value={search} onChange={setSearch} />
       </Flex>
       <SimpleGrid
@@ -52,7 +65,14 @@ export default function AttendancesPageContent({
         columns={{ base: 1 }}
         spacing={{ base: '20px', xl: '20px' }}
       >
-        <AttendancesTable tableData={filteredAttendances} />
+        <AttendancesLog
+          attendances={filteredAttendances}
+          emptyMessage={
+            query
+              ? 'No se encontraron resultados'
+              : 'No hay asistencias registradas'
+          }
+        />
       </SimpleGrid>
     </Box>
   );
