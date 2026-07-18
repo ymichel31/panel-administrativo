@@ -1,5 +1,5 @@
 import { Icon } from '@chakra-ui/react';
-import { MdDescription, MdPerson, MdQrCode } from 'react-icons/md';
+import { MdDescription, MdHowToReg, MdPerson, MdQrCode } from 'react-icons/md';
 import { IRoute } from 'types/navigation';
 
 const routes: IRoute[] = [
@@ -8,6 +8,12 @@ const routes: IRoute[] = [
     layout: '/admin',
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     path: '/clients',
+  },
+  {
+    name: 'Asistencias',
+    layout: '/admin',
+    icon: <Icon as={MdHowToReg} width="20px" height="20px" color="inherit" />,
+    path: '/attendances',
   },
   {
     name: 'Planes',
